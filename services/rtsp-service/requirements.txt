@@ -1,0 +1,9 @@
+# Install all requirement for 
+# pre-process step
+
+opencv-python-headless
+pymongo
+fastapi[standard]
+pika
+python-dotenv
+uvicorn

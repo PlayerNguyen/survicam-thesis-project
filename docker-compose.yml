@@ -1,0 +1,94 @@
+version: "3.8"
+
+services:
+  # RabbitMQ for asynchronous messaging between services
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672" # RabbitMQ port
+      - "15672:15672" # RabbitMQ management interface
+    environment:
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: password
+
+  # Milvus for vector storage of face embeddings
+  milvus:
+    image: milvusdb/milvus:v2.2.9
+    ports:
+      - "19530:19530"
+      - "9091:9091"
+
+  # Global database
+  mongodb:
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    ports:
+      - "27017:27017"
+    volumes:
+      - .data/db/mongo:/data/db
+
+  # RTSP Service (Camera 1) with HTTP preview
+  rtsp-device-service:
+    build: ./services/rtsp-service
+    environment:
+      APP_HOST: "rtsp-device-service"
+      APP_PORT: 80
+      MONGODB_URI: "mongodb://root:example@mongodb/test?authSource=admin"
+      RABBIT_MQ_URI: "amqp://user:password@rabbitmq:5672/%2F"
+    # ports:
+    #   - "8100:80"
+    depends_on:
+      - rabbitmq
+      - mongodb
+
+  # Face Detection Service
+  face-detection-service:
+    build: ./services/face-detection-service
+    environment:
+      RABBIT_MQ_URI: "amqp://user:password@rabbitmq:5672/%2F"
+      FACE_DETECT_MODEL: "fastmtcnn"
+    restart: always
+    deploy:
+      replicas: 1
+    depends_on:
+      - rabbitmq
+
+  # # Face Recognition Service
+  # face_recognition_service:
+  #   build: ./services/face_recognition_service
+  #   environment:
+  #     RABBITMQ_HOST: rabbitmq
+  #     RABBITMQ_QUEUE_IN: detected_faces
+  #     RABBITMQ_QUEUE_OUT: recognition_results
+  #     MILVUS_HOST: milvus
+  #     MILVUS_PORT: 19530
+  #   depends_on:
+  #     - rabbitmq
+  #     - milvus
+
+  # # Data Storage Service (for storing recognized face data)
+  # data_storage_service:
+  #   build: ./services/data_storage_service
+  #   environment:
+  #     RABBITMQ_HOST: rabbitmq
+  #     RABBITMQ_QUEUE_IN: recognition_results
+  #     MILVUS_HOST: milvus
+  #     MILVUS_PORT: 19530
+  #   depends_on:
+  #     - rabbitmq
+  #     - milvus
+
+  # Nginx API Gateway
+  nginx:
+    image: nginx:latest
+    volumes:
+      - .config/nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "80:80"
+    depends_on:
+      - rtsp-device-service
+
+volumes:
+  mongo-data:
