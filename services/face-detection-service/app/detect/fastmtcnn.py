@@ -51,7 +51,7 @@ class FastMTCNN(object):
             for i, (box, prob) in enumerate(zip(boxes[box_ind], probs[box_ind])):
                 cur_obj["box"] = box
                 cur_obj["confidence"] = prob
-                box = [int(b) for b in box]
+                box = [max(0, int(b)) for b in box]
                 cur_obj["image"] = frame[box[1] : box[3], box[0] : box[2]]
                 faces.append(cur_obj)
         return faces
@@ -65,4 +65,7 @@ def cv_to_base64_str(mat):
 
 
 def convert_to_body(object):
+    for v in object:
+        if v["image"] is None or v["image"].size == 0:
+            print(f"Skipping invalid image: {v}")
     return list(map(lambda v: {**v, "image": cv_to_base64_str(v["image"])}, object))

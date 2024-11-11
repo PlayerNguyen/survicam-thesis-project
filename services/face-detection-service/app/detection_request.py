@@ -55,7 +55,8 @@ class Detector:
 
         # normalize information before submit
         if len(result) > 0:
-            result = result = convert_to_body(result)
+
+            result = convert_to_body(result)
             body = {
                 "camera_id": json_response["camera_id"],
                 "detections": result,
