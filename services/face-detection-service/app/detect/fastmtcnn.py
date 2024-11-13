@@ -57,7 +57,8 @@ class FastMTCNN(object):
         return faces
 
 
-def cv_to_base64_str(mat):
+def cv_to_base64_str(mat: cv2.typing.MatLike):
+    mat = cv2.cvtColor(mat, cv2.COLOR_BGR2RGB)
     _, buff = cv2.imencode(".jpg", mat)
     b64 = base64.b64encode(buff)
 

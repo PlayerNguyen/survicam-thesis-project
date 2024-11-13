@@ -5,12 +5,9 @@ import numpy as np
 from PIL import Image
 import io
 import torch
-
 import logging
 from logging import Logger
-
 from mqueue import channel
-import pprint
 from sender import Sender
 from detect.fastmtcnn import FastMTCNN, convert_to_body
 
