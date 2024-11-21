@@ -7,6 +7,7 @@ import io
 import cv2
 import numpy as np
 from embeddings import embedding_image
+from milvus import find_similarity
 
 
 def b64_str_to_img(base64_string: str) -> Image.Image:
@@ -39,11 +40,14 @@ class Callback:
             image = detection_result["image"]
             # convert to PIL.Image and save for previewing
             image = b64_str_to_img(image)
+            image = image.resize((160, 160))
             image.save(os.path.join(self.preview_storage_path, f"{idx}.jpeg"))
 
             # Embedding the image into a embedding vector
             try:
-                pp(embedding_image(image))
+                embedding_tensor = embedding_image(image)
+                embedding_tensor = embedding_tensor.detach().cpu().tolist()
+                pp(find_similarity(embedding_tensor))
             except:
                 pp("Something happend while embedding")
 
