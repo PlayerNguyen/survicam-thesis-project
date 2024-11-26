@@ -34,7 +34,7 @@ class Observer(Thread):
 
     def run(self):
         uri = int(self.uri) if self.uri.isnumeric() else str(self.uri)
-        cap = cv2.VideoCapture(uri)
+        cap = cv2.VideoCapture(uri if uri != "internal" else 0)
         self.connection = pika.BlockingConnection(
             parameters=pika.URLParameters(
                 os.getenv("RABBIT_MQ_URI", "amqp://user:password@localhost:5672/%2F")

@@ -13,7 +13,7 @@ export default function AppLayout() {
       <AppHeader />
 
       {/* Sidebar and content */}
-      <main className={cx(`app-main mx-2 my-4`)}>
+      <main className={cx(`app-main mx-2 my-4 flex flex-row gap-4`)}>
         <div className={cx(`app-sidebar-wrapper w-1/5 min-h-[80vh]`)}>
           <AppSidebar />
         </div>

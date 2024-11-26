@@ -65,7 +65,8 @@ async def get_stream(id):
             streamer(create_generator(cap, device["resize_factor"])),
             media_type="multipart/x-mixed-replace; boundary=frame",
         )
-    except:
+    except BaseException as e:
+        print(e)
         return {
             "success": False,
             "message": "Device is unavailable or something is wrong.",

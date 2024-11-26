@@ -85,6 +85,27 @@ client.create_collection(
 )
 
 
+async def get_all_members(limit: int = 12, page: int = 1, **kwargs):
+    client.load_collection(PRIMARY_EMBEDDING_COLLECTION_NAME)
+    start = limit * (page - 1)
+    end = start + limit
+    count = client.query(PRIMARY_EMBEDDING_COLLECTION_NAME, output_fields=["count(*)"])[
+        0
+    ]["count(*)"]
+    result = client.query(
+        PRIMARY_EMBEDDING_COLLECTION_NAME,
+        limit=end,
+        output_fields=[
+            "id",
+            "name",
+            "updated_at",
+        ],
+        kwargs=kwargs,
+    )
+
+    return [result[start:end], count]
+
+
 async def create_empty_member(name: str):
     """
     Creates a member vector with random embeddings. This one
@@ -105,6 +126,8 @@ async def create_empty_member(name: str):
 
 
 async def get_member(id: str):
+    # Load the member
+    client.load_collection(PRIMARY_EMBEDDING_COLLECTION_NAME)
     return client.get(
         PRIMARY_EMBEDDING_COLLECTION_NAME,
         ids=[id],

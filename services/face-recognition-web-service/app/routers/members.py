@@ -1,15 +1,16 @@
 from fastapi import APIRouter, HTTPException, UploadFile, File, BackgroundTasks
 from typing import Annotated, List
-from ..milvus import (
+from milvus import (
     create_empty_member,
     get_member,
     add_history_embedding,
     get_history_by_member,
     recompute_member_embedding,
     find_similarity,
+    get_all_members,
 )
 from pydantic import BaseModel
-from ..utils import embeddings
+from utils import embeddings
 import base64
 import cv2
 import os
@@ -21,6 +22,23 @@ router = APIRouter()
 
 class CreateNewMemberBody(BaseModel):
     name: str
+
+
+@router.get("/")
+async def main(limit: int = 12, page: int = 1, filter: str | None = None):
+
+    # If limit or page got negative
+    if limit < 1 or page < 1:
+        raise HTTPException(
+            status_code=422,
+            detail={
+                "status": False,
+                "message": "Limit or page parameter cannot be a negative number.",
+            },
+        )
+
+    members = await get_all_members(limit, page, filter=filter)
+    return {"success": True, "data": {"members": members[0], "total": members[1]}}
 
 
 @router.post(
@@ -107,7 +125,7 @@ async def search_test(files: List[UploadFile] = File(...)):
 @router.post(
     "/{id}",
     summary="Upload face asset of member",
-    description="Upload images nto a history database, the list of images must only have one face and only one, the request will response fail if more or less. The uploaded file be store in the data and the embedding of member will be re-calculate by taking average.",
+    description="Upload images into a history database, the list of images must only have one face and only one, the request will response fail if more or less. The uploaded file be store in the data and the embedding of member will be re-calculate by taking average.",
 )
 async def update_face_asset(
     background_tasks: BackgroundTasks,

@@ -18,8 +18,7 @@ import {
 } from "react-icons/ri";
 
 export default function AppHeader() {
-  const { setColorScheme, colorScheme, toggleColorScheme } =
-    useMantineColorScheme();
+  const { setColorScheme, colorScheme } = useMantineColorScheme();
   function handleChangeTheme() {
     setColorScheme(
       colorScheme === "auto"

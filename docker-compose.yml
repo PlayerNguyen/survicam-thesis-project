@@ -12,11 +12,11 @@ services:
       RABBITMQ_DEFAULT_PASS: password
 
   # Milvus for vector storage of face embeddings
-  milvus:
-    image: milvusdb/milvus:v2.2.9
-    ports:
-      - "19530:19530"
-      - "9091:9091"
+  # milvus:
+  #   image: milvusdb/milvus:v2.2.9
+  #   ports:
+  #     - "19530:19530"
+  #     - "9091:9091"
 
   # Global database
   mongodb:
@@ -54,7 +54,26 @@ services:
       replicas: 1
     depends_on:
       - rabbitmq
+    volumes:
+      - ./.data/cache/torch:/root/.cache/torch
 
+  face-recognition-web-service:
+    build: ./services/face-recognition-web-service
+    environment:
+      - MILVUS_CONNECTION_URI=http://standalone:19530
+      - PRIMARY_EMBEDDING_COLLECTION_NAME=primary_face_embeddings
+      - HISTORY_FACE_COLLECTION_NAME=history_face_embeddings
+    deploy:
+      replicas: 1
+    restart: always
+    ports:
+      - 8555:80
+    volumes:
+      - .data/recognition_data:/code/.data
+      - ./.data/cache/torch:/root/.cache/torch
+
+  ui-web-service:
+    
   # # Face Recognition Service
   # face_recognition_service:
   #   build: ./services/face_recognition_service
