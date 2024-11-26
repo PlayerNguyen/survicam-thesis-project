@@ -73,7 +73,10 @@ services:
       - ./.data/cache/torch:/root/.cache/torch
 
   ui-web-service:
-    
+    build: ./services/ui
+    ports:
+      - 8080:80
+
   # # Face Recognition Service
   # face_recognition_service:
   #   build: ./services/face_recognition_service
