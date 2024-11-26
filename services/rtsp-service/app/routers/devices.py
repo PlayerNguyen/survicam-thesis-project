@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from bson import json_util
 import json
 from .util import create_generator, streamer, try_to_open
+import logging
 
 
 from db.devices import (
@@ -65,12 +66,15 @@ async def get_stream(id):
             streamer(create_generator(cap, device["resize_factor"])),
             media_type="multipart/x-mixed-replace; boundary=frame",
         )
-    except BaseException as e:
-        print(e)
-        return {
-            "success": False,
-            "message": "Device is unavailable or something is wrong.",
-        }
+    except Exception as e:
+        logging.error("Error at %s", "division", exc_info=e)
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "success": False,
+                "message": "Device is unavailable or something is wrong.",
+            },
+        )
 
 
 @router.delete("/{id}")

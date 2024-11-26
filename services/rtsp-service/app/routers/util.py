@@ -3,9 +3,11 @@ import asyncio
 
 
 def try_to_open(v):
-    cap = cv2.VideoCapture(v if v != "internal" else 0)
-    if cap is None or not cap.isOpened():
+    device = v if v != "internal" else 0
+    print(f"Opening a video capture with device {device}")
+    cap = cv2.VideoCapture(device)
 
+    if cap is None or not cap.isOpened():
         raise "Unable to open device."
 
     return cap
