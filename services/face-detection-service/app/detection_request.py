@@ -17,7 +17,8 @@ logger = Logger("Detection")
 
 
 sender = Sender()
-
+device = "cuda" if torch.cuda.is_available() else "cpu"
+print(f"Currently using {device}, is_cuda_available: {torch.cuda.is_available()}")
 detect_model = FastMTCNN(
     stride=4,
     resize=0.5,

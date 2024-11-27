@@ -8,6 +8,12 @@ import { RouterProvider } from "react-router-dom";
 import AppRouter from "./routers";
 import themes from "./themes";
 
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+
+// Register dayjs extension
+dayjs.extend(relativeTime);
+
 const queryClient = new QueryClient();
 
 export default function App() {

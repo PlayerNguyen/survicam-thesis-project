@@ -23,10 +23,7 @@ class FastMTCNN(object):
         """
         self.stride = stride
         self.resize = resize
-        self.mtcnn = MTCNN(*args, **kwargs)
-
-        if self.mtcnn.device == "cpu":
-            logger.warning("Current using CPU for the inference stage")
+        self.mtcnn = MTCNN(*args, **kwargs) 
 
     def __call__(self, frames):
         """Detect faces in frames using strided MTCNN."""
