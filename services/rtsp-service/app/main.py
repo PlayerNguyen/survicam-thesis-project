@@ -35,6 +35,6 @@ if __name__ == "__main__":
         "main:app",
         host=os.getenv("APP_HOST"),
         port=int(os.getenv("APP_PORT")),
-        reload=True,
         root_path="/devices",
+        log_level="debug",
     )
