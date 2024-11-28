@@ -57,12 +57,12 @@ services:
     restart: always
     deploy:
       replicas: 1
-      resources:
-         reservations:
-          devices:
-            - driver: nvidia
-              count: 1
-              capabilities: [gpu]
+      # resources:
+      #   reservations:
+      #     devices:
+      #       - driver: nvidia
+      #         count: "${CUDA_ENABLED:-0}"
+      #         capabilities: [gpu]
     depends_on:
       - rabbitmq
     volumes:

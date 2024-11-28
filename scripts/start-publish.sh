@@ -1,0 +1,1 @@
+ffmpeg -f avfoundation -framerate 30 -video_size 1280x720 -i "0:0" -c:v libx264 -preset fast -f rtsp "rtsp://localhost:8554/stream1"
