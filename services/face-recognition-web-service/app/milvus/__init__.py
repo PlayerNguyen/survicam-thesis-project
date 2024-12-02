@@ -190,6 +190,7 @@ async def get_history_by_member(id: str):
 
 async def recompute_member_embedding(id: str):
     client.load_collection(HISTORY_FACE_COLLECTION_NAME, timeout=100)
+    print(f"Recomputing member embedding of member's id: {id}")
     ls = client.query(
         HISTORY_FACE_COLLECTION_NAME,
         filter=f'owner=="{id}"',

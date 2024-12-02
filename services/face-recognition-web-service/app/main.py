@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Request
 from routers.embeddings import router as EmbeddingRouter
 from routers.members import router as MembersRouter
+from routers.assets import router as AssetsRouter
 from dotenv import load_dotenv
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
@@ -14,7 +15,7 @@ origins = [
     # "*",
     "http://localhost:5173",
     "http://localhost:4173",
-    "http://localhost:80"
+    "http://localhost:80",
 ]
 app.add_middleware(
     CORSMiddleware,
@@ -32,6 +33,7 @@ async def main(request: Request):
 
 app.include_router(router=EmbeddingRouter, prefix="/embeddings", tags=["embeddings"])
 app.include_router(router=MembersRouter, prefix="/members", tags=["members"])
+app.include_router(router=AssetsRouter, prefix="/assets", tags=["assets"])
 
 if __name__ == "__main__":
     uvicorn.run(

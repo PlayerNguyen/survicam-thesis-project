@@ -11,8 +11,6 @@ from milvus import (
 )
 from pydantic import BaseModel
 from utils import embeddings
-import base64
-import cv2
 import os
 from store import image_store
 import uuid

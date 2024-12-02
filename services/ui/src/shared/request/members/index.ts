@@ -45,9 +45,50 @@ async function createEmptyMember(
   ).data;
 }
 
+export type UploadFaceImageAssetParams = {
+  id: string;
+  files: File[];
+};
+
+async function uploadFaceImageAssets(
+  params: UploadFaceImageAssetParams,
+  signal?: AbortSignal
+) {
+  const { id, ...otherParams } = params;
+
+  const formData = new FormData();
+  for (let file of otherParams.files) {
+    formData.append("files", file);
+  }
+
+  return (
+    await axiosInstance.post(`/faces/members/${params.id}`, formData, {
+      signal,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    })
+  ).data;
+}
+
+export type GetMemberByIdResponse = {};
+
+async function getMemberById(
+  id: string,
+  signal?: AbortSignal
+): Promise<GetMemberByIdResponse> {
+  return (
+    await axiosInstance.get(`/faces/members/${id}`, {
+      signal: signal,
+    })
+  ).data;
+}
+
 const MemberRequest = {
   getAllMembers,
   createEmptyMember,
+  uploadFaceImageAssets,
+  getMemberById,
 };
 
 export default MemberRequest;
