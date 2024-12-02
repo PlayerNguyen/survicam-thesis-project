@@ -14,9 +14,14 @@ import { MemberResponse } from "../../../../shared/request/members";
 export type MemberCardProps = {
   isLoading?: boolean;
   member?: MemberResponse;
+  onClickUpdateFaceButton?: (member: MemberResponse) => void;
 };
 
-export default function MemberCard({ isLoading, member }: MemberCardProps) {
+export default function MemberCard({
+  isLoading,
+  member,
+  onClickUpdateFaceButton,
+}: MemberCardProps) {
   console.log(member);
 
   return (
@@ -38,11 +43,19 @@ export default function MemberCard({ isLoading, member }: MemberCardProps) {
             </Skeleton>
           </Text>
         </Stack>
-        <Group justify="end">
-          <Button size="compact-sm" radius={"xl"}>
-            Update faces
-          </Button>
-        </Group>
+        {member !== undefined && (
+          <Group justify="end">
+            <Button
+              size="compact-sm"
+              radius={"xl"}
+              onClick={() =>
+                onClickUpdateFaceButton && onClickUpdateFaceButton(member!)
+              }
+            >
+              Update faces
+            </Button>
+          </Group>
+        )}
       </Stack>
     </Paper>
   );

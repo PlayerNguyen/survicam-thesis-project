@@ -8,27 +8,38 @@ export type DeviceResponse = {
   name: string;
   url: string;
   resize_factor: number;
+  last_opened: boolean;
 };
 
 async function getListDevices(): Promise<{
   success: boolean;
   data: DeviceResponse[];
 }> {
-  return (await axiosInstance.get(`/devices/api/`)).data;
+  return (await axiosInstance.get(`/devices/`)).data;
 }
 
 async function createDevice(body: DeviceCreateDeviceRequestBody) {
-  return await axiosInstance.post(`/devices/api/`, { ...body });
+  return await axiosInstance.post(`/devices/`, { ...body });
 }
 
 async function deleteDevice(id: string) {
-  return await axiosInstance.delete(`/devices/api/${id}`);
+  return await axiosInstance.delete(`/devices/${id}`);
+}
+
+async function activeDevice(id: string) {
+  return await axiosInstance.post(`/devices/activate/${id}`);
+}
+
+async function deactivateDevice(id: string) {
+  return await axiosInstance.post(`/devices/deactivate/${id}`);
 }
 
 const DeviceRequest = {
   getListDevices,
   createDevice,
   deleteDevice,
+  activeDevice,
+  deactivateDevice,
 };
 
 export default DeviceRequest;

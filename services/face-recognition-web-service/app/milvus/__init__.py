@@ -39,10 +39,11 @@ primary_face_embeddings_schema = CollectionSchema(
     description="The primary face embeddings collection",
 )
 
-client.create_collection(
-    collection_name=PRIMARY_EMBEDDING_COLLECTION_NAME,
-    schema=primary_face_embeddings_schema,
-)
+if not client.has_collection(collection_name=PRIMARY_EMBEDDING_COLLECTION_NAME):
+    client.create_collection(
+        collection_name=PRIMARY_EMBEDDING_COLLECTION_NAME,
+        schema=primary_face_embeddings_schema,
+    )
 
 embedding_primary_index_params = MilvusClient.prepare_index_params()
 embedding_primary_index_params.add_index(
@@ -80,9 +81,24 @@ history_face_embeddings_schema = CollectionSchema(
     description="The history face embeddings collection",
 )
 
-client.create_collection(
-    collection_name=HISTORY_FACE_COLLECTION_NAME, schema=history_face_embeddings_schema
+history_face_embedding_params = MilvusClient.prepare_index_params()
+history_face_embedding_params.add_index(
+    field_name="embedding",
+    index_type="IVF_FLAT",
+    metric_type="COSINE",
+    params={"nlist": 512},
 )
+client.create_index(
+    collection_name=HISTORY_FACE_COLLECTION_NAME,
+    index_params=history_face_embedding_params,
+    sync=False,
+)
+
+if not client.has_collection(collection_name=HISTORY_FACE_COLLECTION_NAME):
+    client.create_collection(
+        collection_name=HISTORY_FACE_COLLECTION_NAME,
+        schema=history_face_embeddings_schema,
+    )
 
 
 async def get_all_members(limit: int = 12, page: int = 1, **kwargs):
@@ -127,7 +143,7 @@ async def create_empty_member(name: str):
 
 async def get_member(id: str):
     # Load the member
-    client.load_collection(PRIMARY_EMBEDDING_COLLECTION_NAME)
+    client.load_collection(PRIMARY_EMBEDDING_COLLECTION_NAME, timeout=100)
     return client.get(
         PRIMARY_EMBEDDING_COLLECTION_NAME,
         ids=[id],
@@ -159,6 +175,7 @@ async def add_history_embedding(
 
 
 async def get_history_by_member(id: str):
+    client.load_collection(HISTORY_FACE_COLLECTION_NAME, timeout=100)
     return client.query(
         HISTORY_FACE_COLLECTION_NAME,
         filter=f'owner=="{id}"',
@@ -172,7 +189,7 @@ async def get_history_by_member(id: str):
 
 
 async def recompute_member_embedding(id: str):
-
+    client.load_collection(HISTORY_FACE_COLLECTION_NAME, timeout=100)
     ls = client.query(
         HISTORY_FACE_COLLECTION_NAME,
         filter=f'owner=="{id}"',

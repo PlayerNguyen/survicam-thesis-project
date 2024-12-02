@@ -4,13 +4,17 @@ from routers.members import router as MembersRouter
 from dotenv import load_dotenv
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
+import os
 
 load_dotenv()
 
-app = FastAPI(root_path="/faces", redirect_slashes=False)
+app = FastAPI(root_path="/api/faces", redirect_slashes=False)
 
 origins = [
-    "*",
+    # "*",
+    "http://localhost:5173",
+    "http://localhost:4173",
+    "http://localhost:80"
 ]
 app.add_middleware(
     CORSMiddleware,
@@ -21,7 +25,7 @@ app.add_middleware(
 )
 
 
-@app.get("/")
+@app.get("/healthcheck")
 async def main(request: Request):
     return {"status": "ok", "root_path": request.scope.get("root_path")}
 
@@ -33,7 +37,7 @@ if __name__ == "__main__":
     uvicorn.run(
         "main:app",
         host=os.getenv("APP_HOST"),
-        port=int(os.getenv("APP_PORT")),
+        port=int(os.getenv("APP_PORT", default="80")),
         reload=True,
-        root_path="/faces",
+        root_path="/api/faces",
     )

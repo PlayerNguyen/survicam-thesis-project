@@ -12,16 +12,16 @@ import {
   Skeleton,
   Text,
 } from "@mantine/core";
-import { useQueryClient } from "@tanstack/react-query";
 import clsx from "clsx";
 import toast from "react-hot-toast";
-import { RiMore2Line } from "react-icons/ri";
+import { RiEyeLine, RiEyeOffLine, RiMore2Line } from "react-icons/ri";
 import useDeviceRequest from "../../../../../shared/hooks/useDeviceRequest";
 
 export type Device = {
   name: string;
   id: string;
   url: string;
+  last_opened: boolean;
 };
 
 export type DeviceInfoCardProps = {
@@ -33,18 +33,26 @@ export default function DeviceInfoCard({
   device,
   isLoading,
 }: DeviceInfoCardProps) {
-  const { keys } = useDeviceRequest();
   const { mutateAsync: deleteAsync } =
     useDeviceRequest().createMutateDeleteDevice();
-  const queryClient = useQueryClient();
-
+  const { mutateAsync: deactivateDeviceAsync } =
+    useDeviceRequest().createMutateDeactivateDevice();
+  const { mutateAsync: activateDeviceAsync } =
+    useDeviceRequest().createMutateActiveDevice();
   const handleDelete = async () => {
     try {
       await deleteAsync(device!.id);
-      queryClient.invalidateQueries({ queryKey: [keys.getListDevices] });
       toast.success(`Successfully deleted a device.`);
     } catch (err: any) {
       toast.error(`Failed to delete a device. ${err.message}`);
+    }
+  };
+
+  const handleToggle = async () => {
+    if (device!.last_opened === true) {
+      await deactivateDeviceAsync(device!.id);
+    } else {
+      await activateDeviceAsync(device!.id);
     }
   };
 
@@ -67,7 +75,7 @@ export default function DeviceInfoCard({
           >
             {device !== undefined && (
               <Image
-                fallbackSrc="https://placehold.co/600x400?text=Placeholder"
+                fallbackSrc="https://placehold.co/600x400?text=No+connection"
                 className={clsx(`rounded-t-xl`)}
                 src={`http://localhost/devices/api/stream/${
                   device && device.id
@@ -84,8 +92,11 @@ export default function DeviceInfoCard({
               <Text c={"primary.8"} size="xs" fw={"bold"}>
                 {device && device.name}
               </Text>
-              <Badge color="red.6" size="xs">
-                On
+              <Badge
+                color={device?.last_opened === false ? "red.6" : "green.6"}
+                size="xs"
+              >
+                {device?.last_opened === false ? `Off` : `On`}
               </Badge>
               <Group justify="end" className="flex-1">
                 <Popover
@@ -100,6 +111,25 @@ export default function DeviceInfoCard({
                     </ActionIcon>
                   </Popover.Target>
                   <Popover.Dropdown>
+                    <NavLink
+                      leftSection={
+                        device?.last_opened === false ? (
+                          <RiEyeLine />
+                        ) : (
+                          <RiEyeOffLine />
+                        )
+                      }
+                      label={
+                        <Text size="xs">
+                          {device?.last_opened === false
+                            ? `Active`
+                            : `Deactive`}
+                        </Text>
+                      }
+                      onClick={() => {
+                        handleToggle();
+                      }}
+                    />
                     <NavLink
                       c="red.6"
                       label={<Text size="xs">Delete</Text>}

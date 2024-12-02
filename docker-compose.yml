@@ -77,16 +77,16 @@ services:
     deploy:
       replicas: 1
     restart: always
-    ports:
-      - 8555:80
+    # ports:
+    #   - 8555:80
     volumes:
       - .data/recognition_data:/code/.data
       - ./.data/cache/torch:/root/.cache/torch
 
   ui-web-service:
     build: ./services/ui
-    ports:
-      - 8080:80
+    # ports:
+    #   - 8080:80
 
   # # Face Recognition Service
   # face_recognition_service:
@@ -192,6 +192,8 @@ services:
       - "80:80"
     depends_on:
       - rtsp-device-service
+      - face-recognition-web-service
+      - ui-web-service
 
 volumes:
   mongo-data:

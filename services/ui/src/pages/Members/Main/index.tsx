@@ -12,6 +12,7 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 import { useQueryClient } from "@tanstack/react-query";
 import clsx from "clsx";
+import { useState } from "react";
 import toast from "react-hot-toast";
 import {
   RiUser2Line,
@@ -20,14 +21,25 @@ import {
   RiUserSearchLine,
 } from "react-icons/ri";
 import useMemberRequest from "../../../shared/hooks/useMemberRequest";
+import { MemberResponse } from "../../../shared/request/members";
 import MemberCard from "./components/Card";
 import CreateEmptyMemberDrawer, {
   CreateEmptyMemberFormTypes,
 } from "./components/CreateEmptyMemberDrawer";
+import UpdateFaceMemberModal from "./components/UpdateFaceMemberModal";
 
 export default function MembersMain() {
   const [createDrawerOpened, { toggle, close: closeCreateDrawer }] =
     useDisclosure(false);
+
+  const [
+    updateFaceDialogOpened,
+    { toggle: toggleUpdateFaceDialog, close: closeUpdateFaceDialog },
+  ] = useDisclosure(false);
+
+  const [currentUpdateMember, setCurrentUpdateMember] = useState<
+    any | undefined
+  >(undefined);
   const { keys } = useMemberRequest();
   const queryClient = useQueryClient();
   const { data: members, isFetching } =
@@ -47,6 +59,15 @@ export default function MembersMain() {
         `Cannot create a new member. Because ${(err as unknown as any).message}`
       );
     }
+  };
+
+  const handleUpdateFace = () => {
+    console.log(`Update face handle`);
+  };
+
+  const handleClickUpdateFaceButton = (member: MemberResponse) => {
+    setCurrentUpdateMember(member);
+    toggleUpdateFaceDialog();
   };
 
   return (
@@ -85,7 +106,7 @@ export default function MembersMain() {
               <MemberCard isLoading key={`dummy-member-card-key-index-${__}`} />
             ))}
           </SimpleGrid>
-        ) : members?.data.members.length === 0 ? (
+        ) : members && members.data.members.length === 0 ? (
           <Flex
             mih={"70vh"}
             justify={`center`}
@@ -105,6 +126,7 @@ export default function MembersMain() {
                 isLoading={false}
                 member={member}
                 key={`member-card-with-id-${member.id}`}
+                onClickUpdateFaceButton={handleClickUpdateFaceButton}
               />
             ))}
           </SimpleGrid>
@@ -116,6 +138,19 @@ export default function MembersMain() {
         opened={createDrawerOpened}
         onClose={closeCreateDrawer}
         onTrigger={(values) => handleCreateMember(values)}
+      />
+
+      {/* Update face dialog  */}
+      <UpdateFaceMemberModal
+        opened={updateFaceDialogOpened}
+        onClose={() => {
+          closeUpdateFaceDialog();
+          setTimeout(() => {
+            setCurrentUpdateMember(undefined);
+          }, 300);
+        }}
+        onUpdate={handleUpdateFace}
+        member={currentUpdateMember}
       />
     </Paper>
   );

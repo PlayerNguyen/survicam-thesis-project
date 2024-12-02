@@ -12,6 +12,7 @@ export default function DeviceMain() {
   const [isCreateDrawerOpened, createDrawerHandlers] = useDisclosure(false);
 
   const devices = (devicesResponse && devicesResponse.data) || [];
+  console.log(devices);
 
   return (
     <Paper
@@ -59,6 +60,7 @@ export default function DeviceMain() {
                       id: device._id.$oid,
                       name: device.name,
                       url: device.url,
+                      last_opened: device.last_opened,
                     }}
                   />
                 );
