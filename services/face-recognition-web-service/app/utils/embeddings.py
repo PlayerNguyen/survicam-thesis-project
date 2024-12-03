@@ -10,7 +10,7 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 resnet = InceptionResnetV1(pretrained="vggface2", device=device).eval()
 detector = MTCNN(
     image_size=160,
-    factor=0.706,
+    factor=0.5,
     keep_all=True,
     post_process=True,
     device=device,

@@ -1,4 +1,5 @@
 import {
+  AspectRatio,
   Button,
   Divider,
   FileButton,
@@ -11,6 +12,7 @@ import {
   Text,
   UnstyledButton,
 } from "@mantine/core";
+import { useQueryClient } from "@tanstack/react-query";
 import clsx from "clsx";
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -32,8 +34,10 @@ export default function UpdateFaceMemberModal({
   const [files, setFiles] = useState<File[]>([]);
   const { mutateAsync: uploadFaceImageAsset, isPending: isUploading } =
     useMemberRequest().createMutateUploadAsset();
-
-  
+  const queryClient = useQueryClient();
+  const { data: memberData, isFetching: isMemberDataFetching } =
+    useMemberRequest().createQueryGetMemberById((member && member.id) || null);
+  const { keys } = useMemberRequest();
   const handleFileChange = (files: File[]) => {
     console.log(files);
 
@@ -49,6 +53,10 @@ export default function UpdateFaceMemberModal({
         toast.success(
           `Successfully update the face of member's ${member.name}`
         );
+        queryClient.invalidateQueries({
+          queryKey: [keys.getMemberById, member.id],
+        });
+        setFiles([]);
       })
       .catch((err) => {
         toast.error(`${err.message}. [${err.response.data.detail.message}]`);
@@ -68,6 +76,16 @@ export default function UpdateFaceMemberModal({
     >
       <Paper>{(member && member.name) || "Undefined user name"}</Paper>
       <Divider my={`md`} />
+      <Flex direction={"column"} gap={"xs"} my="md">
+        <Text size="xl" fw={"bold"}>
+          Upload images
+        </Text>
+        <Text size="sm">
+          Please upload the image that contains only one frontal face. The
+          system will automatically reject if there are more than one face, or
+          no face was detected.
+        </Text>
+      </Flex>
       <Flex direction={`column`} gap={"md"}>
         <FileButton
           onChange={handleFileChange}
@@ -87,7 +105,7 @@ export default function UpdateFaceMemberModal({
               >
                 <Flex align={`center`} justify={`center`} gap={"md"}>
                   <RiImage2Line />
-                  <Text>Select file to upload</Text>
+                  <Text>Select files to upload</Text>
                 </Flex>
               </Paper>
             </UnstyledButton>
@@ -112,27 +130,29 @@ export default function UpdateFaceMemberModal({
           </Button>
         </Flex>
       </Flex>
-      <Divider my={"md"} />
+      <Divider my={"sm"} />
+      <Text size="xl" fw={"bold"} my={"sm"}>
+        Recent data
+      </Text>
 
       <SimpleGrid cols={3} className="max-h-[50vh] overflow-x-scroll">
-        <Image src={`https://placehold.co/600x400`} />
-        <Image src={`https://placehold.co/600x400`} />
-        <Image src={`https://placehold.co/600x400`} />
-        <Image src={`https://placehold.co/600x400`} />
-        <Image src={`https://placehold.co/600x400`} />
-        <Image src={`https://placehold.co/600x400`} />
-        <Image src={`https://placehold.co/600x400`} />
-        <Image src={`https://placehold.co/600x400`} />
-        <Image src={`https://placehold.co/600x400`} />
-        <Image src={`https://placehold.co/600x400`} />
-        <Image src={`https://placehold.co/600x400`} />
-        <Image src={`https://placehold.co/600x400`} />
-        <Image src={`https://placehold.co/600x400`} />
-        <Image src={`https://placehold.co/600x400`} />
-        <Image src={`https://placehold.co/600x400`} />
-        <Image src={`https://placehold.co/600x400`} />
-        <Image src={`https://placehold.co/600x400`} />
-        <Image src={`https://placehold.co/600x400`} />
+        {isMemberDataFetching || memberData === undefined ? (
+          [...Array(12)].map(() => {
+            return <Image src={`https://placehold.co/600x400`} />;
+          })
+        ) : memberData!.data.history.length === 0 ? (
+          <>Empty</>
+        ) : (
+          memberData.data.history.map((image) => (
+            <AspectRatio ratio={1 / 1}>
+              <Image
+                src={`${
+                  import.meta.env.VITE_API_GATEWAY_BASE_URL
+                }/faces/assets/${image.image}`}
+              />
+            </AspectRatio>
+          ))
+        )}
       </SimpleGrid>
     </Modal>
   );

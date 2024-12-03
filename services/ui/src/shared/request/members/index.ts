@@ -70,8 +70,23 @@ async function uploadFaceImageAssets(
     })
   ).data;
 }
-
-export type GetMemberByIdResponse = {};
+export type GetMemberByIdHistory = {
+  created_at: number;
+  id: string;
+  image: string;
+  owner: string;
+};
+export type GetMemberByIdResponse = {
+  sucess: true;
+  data: {
+    history: GetMemberByIdHistory[];
+    member: {
+      id: string;
+      name: string;
+      updated_at: number;
+    };
+  };
+};
 
 async function getMemberById(
   id: string,

@@ -144,7 +144,7 @@ async def update_face_asset(
     for idx, file in enumerate(files):
         _, ext = os.path.splitext(file.filename)
         accept_ext = set([".jpeg", ".jpg", ".png"])
-        if ext not in accept_ext:
+        if ext.lower() not in accept_ext:
             raise HTTPException(
                 status_code=422,
                 detail={

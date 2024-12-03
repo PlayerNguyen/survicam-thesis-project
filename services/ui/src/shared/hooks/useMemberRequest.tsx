@@ -40,10 +40,11 @@ export default function useMemberRequest() {
     });
   }
 
-  function createQueryGetMemberById(id: string) {
+  function createQueryGetMemberById(id: string | null) {
     return useQuery({
       queryKey: [keys.getMemberById, id],
-      queryFn: ({ signal }) => MemberRequest.getMemberById(id, signal),
+      queryFn: ({ signal }) => MemberRequest.getMemberById(id!, signal),
+      enabled: id !== null,
     });
   }
 
