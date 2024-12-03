@@ -17,6 +17,7 @@
     "@eslint/js": "^9.13.0",
     "@mantine/colors-generator": "^7.14.1",
     "@mantine/core": "^7.14.1",
+    "@mantine/dropzone": "^7.14.3",
     "@mantine/form": "^7.14.1",
     "@mantine/hooks": "^7.14.1",
     "@tailwindcss/typography": "^0.5.15",

@@ -1,4 +1,6 @@
 import "@mantine/core/styles.css";
+import "@mantine/dropzone/styles.css";
+
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 import { MantineProvider } from "@mantine/core";
