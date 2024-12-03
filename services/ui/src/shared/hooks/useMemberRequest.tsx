@@ -11,6 +11,7 @@ export default function useMemberRequest() {
     getMemberById: "get-member-by-id",
     createEmptyMember: "post-create-empty-member",
     uploadAssetMember: "post-upload-asset-member",
+    searchMember: "post-search-members",
   };
   const queryClient = useQueryClient();
 
@@ -61,11 +62,21 @@ export default function useMemberRequest() {
     });
   }
 
+  function createMutateSearchMember() {
+    return useMutation({
+      mutationKey: [keys.searchMember],
+      mutationFn: (params: Pick<UploadFaceImageAssetParams, "files">) =>
+        MemberRequest.postSearchMemberViaImages({ files: params.files }),
+      onSuccess: () => {},
+    });
+  }
+
   return {
     keys,
     createQueryGetAllMembers,
     createMutateCreateEmptyMember,
     createMutateUploadAsset,
     createQueryGetMemberById,
+    createMutateSearchMember,
   };
 }

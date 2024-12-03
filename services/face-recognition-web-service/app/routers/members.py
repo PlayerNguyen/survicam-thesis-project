@@ -14,6 +14,7 @@ from utils import embeddings
 import os
 from store import image_store
 import uuid
+from utils.files import is_acceptable_file
 
 router = APIRouter()
 
@@ -78,9 +79,7 @@ async def get_member_by_id(id: str):
 async def search_test(files: List[UploadFile] = File(...)):
     result = []
     for idx, file in enumerate(files):
-        _, ext = os.path.splitext(file.filename)
-        accept_ext = set([".jpeg", ".jpg", ".png"])
-        if ext not in accept_ext:
+        if not is_acceptable_file(file.filename):
             raise HTTPException(
                 status_code=422,
                 detail={
@@ -142,9 +141,7 @@ async def update_face_asset(
         )
 
     for idx, file in enumerate(files):
-        _, ext = os.path.splitext(file.filename)
-        accept_ext = set([".jpeg", ".jpg", ".png"])
-        if ext.lower() not in accept_ext:
+        if not is_acceptable_file(file.filename):
             raise HTTPException(
                 status_code=422,
                 detail={

@@ -99,11 +99,41 @@ async function getMemberById(
   ).data;
 }
 
+export interface SearchMemberViaImagesResponse {
+  data: SearchMemberViaImagesResponseData[][];
+}
+
+export interface SearchMemberViaImagesResponseData {
+  face_area: number[];
+  confidence: number;
+  result: any[][];
+}
+
+async function postSearchMemberViaImages(
+  params: Pick<UploadFaceImageAssetParams, "files">
+): Promise<SearchMemberViaImagesResponse> {
+  const { files } = params;
+
+  const formData = new FormData();
+  for (let file of files) {
+    formData.append("files", file);
+  }
+
+  return (
+    await axiosInstance.post(`/faces/members/search`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    })
+  ).data;
+}
+
 const MemberRequest = {
   getAllMembers,
   createEmptyMember,
   uploadFaceImageAssets,
   getMemberById,
+  postSearchMemberViaImages,
 };
 
 export default MemberRequest;
