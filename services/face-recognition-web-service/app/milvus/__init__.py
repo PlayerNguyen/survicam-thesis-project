@@ -88,11 +88,6 @@ history_face_embedding_params.add_index(
     metric_type="COSINE",
     params={"nlist": 512},
 )
-client.create_index(
-    collection_name=HISTORY_FACE_COLLECTION_NAME,
-    index_params=history_face_embedding_params,
-    sync=False,
-)
 
 if not client.has_collection(collection_name=HISTORY_FACE_COLLECTION_NAME):
     client.create_collection(
@@ -100,6 +95,12 @@ if not client.has_collection(collection_name=HISTORY_FACE_COLLECTION_NAME):
         schema=history_face_embeddings_schema,
     )
 
+
+client.create_index(
+    collection_name=HISTORY_FACE_COLLECTION_NAME,
+    index_params=history_face_embedding_params,
+    sync=False,
+)
 
 async def get_all_members(limit: int = 12, page: int = 1, **kwargs):
     client.load_collection(PRIMARY_EMBEDDING_COLLECTION_NAME)

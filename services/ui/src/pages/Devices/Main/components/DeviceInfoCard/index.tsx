@@ -77,7 +77,7 @@ export default function DeviceInfoCard({
               <Image
                 fallbackSrc="https://placehold.co/600x400?text=No+connection"
                 className={clsx(`rounded-t-xl`)}
-                src={`http://localhost/devices/api/stream/${
+                src={`http://localhost/api/devices/stream/${
                   device && device.id
                 }`}
               />

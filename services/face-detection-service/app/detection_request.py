@@ -21,9 +21,9 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 print(f"Currently using {device}, is_cuda_available: {torch.cuda.is_available()}")
 detect_model = FastMTCNN(
     stride=4,
-    resize=0.5,
+    resize=1,
     margin=14,
-    factor=0.5,
+    factor=0.76,
     keep_all=True,
     device="cuda" if torch.cuda.is_available() else "cpu",
 )

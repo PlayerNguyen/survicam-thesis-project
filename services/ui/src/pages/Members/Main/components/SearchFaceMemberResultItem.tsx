@@ -24,7 +24,7 @@ function SearchFaceMemberResultItemInfoPill({
   const [opened, { close, open }] = useDisclosure(false);
   const { data: memberData, isFetching: loadingMemberData } =
     useMemberRequest().createQueryGetMemberById((memberId && memberId) || null);
-  console.log(memberData, distance);
+  // console.log(memberData, distance);
 
   return (
     <Popover
