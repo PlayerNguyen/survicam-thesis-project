@@ -14,6 +14,7 @@ from utils import embeddings
 import os
 from store import image_store
 import uuid
+from utils.files import is_acceptable_file
 
 router = APIRouter()
 
@@ -78,9 +79,7 @@ async def get_member_by_id(id: str):
 async def search_test(files: List[UploadFile] = File(...)):
     result = []
     for idx, file in enumerate(files):
-        _, ext = os.path.splitext(file.filename)
-        accept_ext = set([".jpeg", ".jpg", ".png"])
-        if ext not in accept_ext:
+        if not is_acceptable_file(file.filename):
             raise HTTPException(
                 status_code=422,
                 detail={
@@ -89,11 +88,11 @@ async def search_test(files: List[UploadFile] = File(...)):
                 },
             )
 
-        print(f"Searching face in file {_}")
+        print(f"Searching face in file {file.filename}")
 
         current_file = await file.read()
         current_file = await embeddings.file_to_mat(current_file)
-
+        
         faces = await embeddings.detect_and_embed_bounding_box_and_images(current_file)
         # If
         if len(faces) == 0:
@@ -142,9 +141,7 @@ async def update_face_asset(
         )
 
     for idx, file in enumerate(files):
-        _, ext = os.path.splitext(file.filename)
-        accept_ext = set([".jpeg", ".jpg", ".png"])
-        if ext not in accept_ext:
+        if not is_acceptable_file(file.filename):
             raise HTTPException(
                 status_code=422,
                 detail={
@@ -165,7 +162,7 @@ async def update_face_asset(
                 status_code=400,
                 detail={
                     "success": False,
-                    "message": f"No (or more than one) face found in the image at index {idx}. The file named {_}",
+                    "message": f"No (or more than one) face found in the image at index {idx}. The file named {file.filename}",
                 },
             )
 

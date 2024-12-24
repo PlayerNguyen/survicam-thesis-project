@@ -26,6 +26,7 @@ import MemberCard from "./components/Card";
 import CreateEmptyMemberDrawer, {
   CreateEmptyMemberFormTypes,
 } from "./components/CreateEmptyMemberDrawer";
+import SearchFaceMemberModal from "./components/SearchFaceMemberModal";
 import UpdateFaceMemberModal from "./components/UpdateFaceMemberModal";
 
 export default function MembersMain() {
@@ -47,6 +48,7 @@ export default function MembersMain() {
 
   const { mutateAsync: createEmptyMemberAsync } =
     useMemberRequest().createMutateCreateEmptyMember();
+  const [searchFaceModalOpened, searchFaceModalActions] = useDisclosure();
 
   const handleCreateMember = async (values: CreateEmptyMemberFormTypes) => {
     try {
@@ -89,6 +91,13 @@ export default function MembersMain() {
             placeholder="Search by user's name"
             radius={"xl"}
           />
+          <Button
+            radius={"xl"}
+            leftSection={<RiUserSearchLine size={16} />}
+            onClick={searchFaceModalActions.open}
+          >
+            Search faces
+          </Button>
           <Button
             radius={"xl"}
             leftSection={<RiUserAddLine size={16} />}
@@ -151,6 +160,13 @@ export default function MembersMain() {
         }}
         onUpdate={handleUpdateFace}
         member={currentUpdateMember}
+      />
+      {/* Search face member modal */}
+      <SearchFaceMemberModal
+        opened={searchFaceModalOpened}
+        onClose={() => {
+          searchFaceModalActions.close();
+        }}
       />
     </Paper>
   );

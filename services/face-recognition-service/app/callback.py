@@ -8,11 +8,14 @@ import cv2
 import numpy as np
 from embeddings import embedding_image
 from milvus import find_similarity
+import json
+import requests
 
 
 def b64_str_to_img(base64_string: str) -> Image.Image:
     imgdata = base64.b64decode(base64_string)
-    return Image.open(io.BytesIO(imgdata))
+    res: Image.Image = Image.open(io.BytesIO(imgdata))
+    return res
 
 
 def pil_to_rgb(image):
@@ -27,7 +30,8 @@ class Callback:
 
         if not os.path.exists(self.preview_storage_path):
             os.mkdir(self.preview_storage_path)
-
+    
+    
     def on_receive(self, channel, method, properties, body):
         print(f" [{self.pid}] Receiving from detection message queue:")
         json_body = json.loads(body)
@@ -40,14 +44,18 @@ class Callback:
             image = detection_result["image"]
             # convert to PIL.Image and save for previewing
             image = b64_str_to_img(image)
-            image = image.resize((160, 160))
+            # image = image.resize((160, 160))
             image.save(os.path.join(self.preview_storage_path, f"{idx}.jpeg"))
 
             # Embedding the image into a embedding vector
             try:
                 embedding_tensor = embedding_image(image)
                 embedding_tensor = embedding_tensor.detach().cpu().tolist()
-                pp(find_similarity(embedding_tensor))
+                response_str = json.dumps(find_similarity(embedding_tensor)[0])
+                print(f"Successfully compressed the embeddng tensor")
+                # print()
+                resp = requests.post(f"http://localhost:3000/logs/", json=response_str)
+                print(resp)
             except:
                 pp("Something happend while embedding")
 

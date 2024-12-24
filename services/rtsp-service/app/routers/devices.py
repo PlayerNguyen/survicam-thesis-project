@@ -30,6 +30,9 @@ router = APIRouter()
 activated_devices = dict()
 
 for item in list(get_all_devices()):
+    if "last_opened" not in item:
+        continue
+    
     if item["last_opened"] is True:
         print(item)
         _id = str(item["_id"])

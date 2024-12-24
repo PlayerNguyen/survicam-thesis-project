@@ -1,4 +1,7 @@
 import "@mantine/core/styles.css";
+import "@mantine/dropzone/styles.css";
+
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 import { MantineProvider } from "@mantine/core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -22,6 +25,7 @@ export default function App() {
       <MantineProvider theme={themes.default} defaultColorScheme="auto">
         <RouterProvider router={AppRouter} />
         <Toaster />
+        <ReactQueryDevtools initialIsOpen={false} />
       </MantineProvider>
     </QueryClientProvider>
   );
