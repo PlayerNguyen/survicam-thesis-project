@@ -89,15 +89,20 @@ export default function DeviceInfoCard({
         <Group px={"xs"} py={4}>
           <Skeleton visible={isLoading !== undefined && isLoading}>
             <Group gap={6}>
-              <Text c={"primary.8"} size="xs" fw={"bold"}>
-                {device && device.name}
-              </Text>
-              <Badge
-                color={device?.last_opened === false ? "red.6" : "green.6"}
-                size="xs"
-              >
-                {device?.last_opened === false ? `Off` : `On`}
-              </Badge>
+              <Flex direction="column">
+                <Text c={"primary.8"} size="xs" fw={"bold"}>
+                  {device && device.name}
+                </Text>
+                <Flex gap={4} align={`center`}>
+                  <Text c="dark.4">Recognition mode: </Text>
+                  <Badge
+                    color={device?.last_opened === false ? "red.6" : "green.6"}
+                    size="xs"
+                  >
+                    {device?.last_opened === false ? `Off` : `On`}
+                  </Badge>
+                </Flex>
+              </Flex>
               <Group justify="end" className="flex-1">
                 <Popover
                   transitionProps={{ transition: "pop" }}
