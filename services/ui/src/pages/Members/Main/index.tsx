@@ -96,7 +96,7 @@ export default function MembersMain() {
             leftSection={<RiUserSearchLine size={16} />}
             onClick={searchFaceModalActions.open}
           >
-            Search faces
+            Similarity search
           </Button>
           <Button
             radius={"xl"}
