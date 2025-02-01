@@ -1,10 +1,7 @@
-import { useContext } from "react";
 import { Outlet } from "react-router-dom";
-import AuthContext from "./contexts/AuthContext";
 import useAuthenticateRequest from "./shared/hooks/useAuthenticateRequest";
 
 export default function ProtectedRouter() {
-  const { auth } = useContext(AuthContext);
   useAuthenticateRequest();
   // console.log(auth);
 

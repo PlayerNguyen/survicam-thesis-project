@@ -11,6 +11,7 @@
     "dev:web": "concurrently \"bun run dev:user-service\" \"bun run dev:ui\""
   },
   "dependencies": {
+    "@elysiajs/static": "^1.2.0",
     "concurrently": "^9.1.0"
   }
 }
