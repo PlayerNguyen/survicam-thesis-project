@@ -16,13 +16,22 @@ await mongoose
 // Load all recently opened
 await DeviceManagement.getInstance().init();
 
+process.on("beforeExit", async () => {
+  // Truncate all processes
+  DeviceManagement.getInstance()
+    .cancelAll()
+    .then(() => {
+      process.exit(0);
+    });
+});
+
 const app = new Elysia().use(cors({})).use(
   // staticPlugin({
   //   assets: "./.data",
   // })
   staticHls({
-    assetDirectory: "./.data",
-  })
+    assetDirectory: Bun.env.STREAM_OUTPUT_DIRECTORY || "./.data",
+  }),
 );
 
 export default app;

@@ -5,7 +5,6 @@ import {
   Divider,
   Flex,
   Group,
-  Image,
   NavLink,
   Paper,
   Popover,
@@ -15,6 +14,7 @@ import {
 import clsx from "clsx";
 import toast from "react-hot-toast";
 import { RiEyeLine, RiEyeOffLine, RiMore2Line } from "react-icons/ri";
+import VideoJs from "../../../../../shared/components/VideoJs";
 import useDeviceRequest from "../../../../../shared/hooks/useDeviceRequest";
 
 export type Device = {
@@ -28,6 +28,9 @@ export type DeviceInfoCardProps = {
   isLoading?: boolean;
   device?: Device;
 };
+
+const VITE_API_DEVICE_STREAM_URL = import.meta.env
+  .VITE_API_DEVICE_STREAM_URL as string;
 
 export default function DeviceInfoCard({
   device,
@@ -56,6 +59,8 @@ export default function DeviceInfoCard({
     }
   };
 
+  console.table(device);
+
   return (
     <Paper
       withBorder
@@ -74,12 +79,30 @@ export default function DeviceInfoCard({
             visible={isLoading !== undefined && isLoading}
           >
             {device !== undefined && (
-              <Image
-                fallbackSrc="https://placehold.co/600x400?text=No+connection"
-                className={clsx(`rounded-t-xl`)}
-                src={`http://localhost/api/devices/stream/${
-                  device && device.id
-                }`}
+              // <Image
+              //   fallbackSrc="https://placehold.co/600x400?text=No+connection"
+              //   className={clsx(`rounded-t-xl`)}
+              //   src={`${VITE_API_DEVICE_STREAM_URL}${
+              //     device && device.id
+              //   }/stream.m3u8`}
+              // />
+              <VideoJs
+                options={{
+                  autoplay: true,
+                  controls: true,
+                  responsive: true,
+                  fluid: true,
+                  muted: true,
+                  sources: [
+                    {
+                      src: `${VITE_API_DEVICE_STREAM_URL}${
+                        device && device.id
+                      }/stream.m3u8`,
+
+                      type: "application/x-mpegURL",
+                    },
+                  ],
+                }}
               />
             )}
           </Skeleton>

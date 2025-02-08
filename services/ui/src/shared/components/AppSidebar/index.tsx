@@ -1,6 +1,6 @@
 import { NavLink, Paper } from "@mantine/core";
 import clsx from "clsx";
-import { RiCamera2Line, RiUserLine } from "react-icons/ri";
+import { RiCamera2Line, RiListView, RiUserLine } from "react-icons/ri";
 import AppRoutes from "../../../routes";
 
 const SIDER_NAVLINK = [
@@ -13,6 +13,11 @@ const SIDER_NAVLINK = [
     label: `Members`,
     icon: <RiUserLine />,
     path: AppRoutes.Members.Index(),
+  },
+  {
+    label: "Logging",
+    icon: <RiListView />,
+    path: AppRoutes.Logging.Index(),
   },
 ];
 

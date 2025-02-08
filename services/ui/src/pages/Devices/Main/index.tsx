@@ -5,13 +5,16 @@ import { RiAddCircleFill, RiCamera3Line } from "react-icons/ri";
 import useDeviceRequest from "../../../shared/hooks/useDeviceRequest";
 import CreateDeviceDrawer from "./components/CreateDeviceDrawer";
 import DeviceInfoCard from "./components/DeviceInfoCard";
+import videojs from 'video.js';
+import 'video.js/dist/video-js.css'
 
 export default function DeviceMain() {
   const { data: devicesResponse, isFetching } =
     useDeviceRequest().createQueryGetDeviceList();
   const [isCreateDrawerOpened, createDrawerHandlers] = useDisclosure(false);
+  // console.log(devicesResponse);
 
-  const devices = (devicesResponse && devicesResponse.data) || [];
+  const devices = (devicesResponse && devicesResponse.devices) || [];
   console.log(devices);
 
   return (
@@ -52,12 +55,12 @@ export default function DeviceMain() {
                 );
               })
             : devices &&
-              devices.map((device) => {
+              devices.map((device: any) => {
                 return (
                   <DeviceInfoCard
-                    key={device._id.$oid}
+                    key={device._id}
                     device={{
-                      id: device._id.$oid,
+                      id: device._id,
                       name: device.name,
                       url: device.url,
                       last_opened: device.last_opened,

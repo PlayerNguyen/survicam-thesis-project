@@ -7,6 +7,9 @@ const AppRoutes = {
   Members: {
     Index: () => `/members`,
   },
+  Logging: {
+    Index: () => "/logging",
+  },
 };
 
 export default AppRoutes;

@@ -164,3 +164,13 @@ def find_similarity(data: list[list], radius: float = 0.26):
         limit=5,
         # search_params={"params": {"radius": radius}},
     )
+
+
+def find_single_result_similarity(data: list[list], threshold: float = 0.26):
+    client.load_collection(PRIMARY_EMBEDDING_COLLECTION_NAME, timeout=120)
+    return client.search(
+        PRIMARY_EMBEDDING_COLLECTION_NAME,
+        data=data,
+        limit=1,
+        search_params={"params": {"radius": threshold}},
+    )

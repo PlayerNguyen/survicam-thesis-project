@@ -1,5 +1,12 @@
+import axios from "axios";
 import { DeviceCreateDeviceRequestBody } from "../../../types";
-import axiosInstance from "../axios";
+// import axiosInstance from "../axios";
+
+const BASE_URL = import.meta.env.VITE_API_DEVICE_URL || "http://localhost";
+
+const axiosInstance = axios.create({
+  baseURL: BASE_URL,
+});
 
 export type DeviceResponse = {
   _id: {
@@ -13,7 +20,7 @@ export type DeviceResponse = {
 
 async function getListDevices(): Promise<{
   success: boolean;
-  data: DeviceResponse[];
+  devices: DeviceResponse[];
 }> {
   return (await axiosInstance.get(`/devices/`)).data;
 }

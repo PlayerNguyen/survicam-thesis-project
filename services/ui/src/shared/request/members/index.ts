@@ -1,4 +1,12 @@
-import axiosInstance from "../axios";
+// import axiosInstance from "../axios";
+
+import axios from "axios";
+
+const VITE_API_FACE_RECOGNITION_URL = import.meta.env.VITE_API_FACE_RECOGNITION_URL
+
+const axiosInstance = axios.create({
+  baseURL: VITE_API_FACE_RECOGNITION_URL,
+})
 
 export type GetAllMembersParams = Partial<{
   limit: number;
@@ -23,7 +31,7 @@ async function getAllMembers(
   params?: GetAllMembersParams,
   signal?: AbortSignal
 ): Promise<GetAllMembersResponse> {
-  return (await axiosInstance.get(`/faces/members/`, { params, signal })).data;
+  return (await axiosInstance.get(`/members/`, { params, signal })).data;
 }
 
 export type CreateEmptyMemberParams = {
@@ -36,7 +44,7 @@ async function createEmptyMember(
 ): Promise<{}> {
   return (
     await axiosInstance.post(
-      `/faces/members/`,
+      `/members/`,
       { name: params.name },
       {
         signal,
@@ -62,7 +70,7 @@ async function uploadFaceImageAssets(
   }
 
   return (
-    await axiosInstance.post(`/faces/members/${params.id}`, formData, {
+    await axiosInstance.post(`/members/${params.id}`, formData, {
       signal,
       headers: {
         "Content-Type": "multipart/form-data",
@@ -93,7 +101,7 @@ async function getMemberById(
   signal?: AbortSignal
 ): Promise<GetMemberByIdResponse> {
   return (
-    await axiosInstance.get(`/faces/members/${id}`, {
+    await axiosInstance.get(`/members/${id}`, {
       signal: signal,
     })
   ).data;
@@ -120,7 +128,7 @@ async function postSearchMemberViaImages(
   }
 
   return (
-    await axiosInstance.post(`/faces/members/search`, formData, {
+    await axiosInstance.post(`/members/search`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },

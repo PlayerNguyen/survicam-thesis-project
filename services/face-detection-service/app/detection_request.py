@@ -96,6 +96,8 @@ def handle_request_from_devices():
         queue="device.face_detection_queue", on_message_callback=detector.chunk
     )
     try:
+        print(f"Begining to consume from message queue...")
         channel.start_consuming()
     except KeyboardInterrupt:
+        print(f"Interrupted. Stop consuming from the message queue...")
         channel.stop_consuming()
