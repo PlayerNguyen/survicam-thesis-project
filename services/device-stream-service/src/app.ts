@@ -4,6 +4,8 @@ import { staticHls } from "@shared/plugins/elyisiajs-static-hls";
 import Assertions from "@shared/util/Assertions";
 import Elysia from "elysia";
 import mongoose from "mongoose";
+import useDeviceManagement from "./plugin/device-management";
+import swagger from "@elysiajs/swagger";
 
 console.log(`Connecting to mongodb server...`);
 
@@ -25,13 +27,16 @@ process.on("beforeExit", async () => {
     });
 });
 
-const app = new Elysia().use(cors({})).use(
-  // staticPlugin({
-  //   assets: "./.data",
-  // })
-  staticHls({
-    assetDirectory: Bun.env.STREAM_OUTPUT_DIRECTORY || "./.data",
-  }),
-);
-
+const app = new Elysia()
+  .use(cors({}))
+  .use(swagger({ path: "/docs" }))
+  .use(
+    // staticPlugin({
+    //   assets: "./.data",
+    // })
+    staticHls({
+      assetDirectory: Bun.env.STREAM_OUTPUT_DIRECTORY || "./.data",
+    }),
+  )
+  .use(useDeviceManagement());
 export default app;

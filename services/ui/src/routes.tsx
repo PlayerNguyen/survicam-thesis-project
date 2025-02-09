@@ -10,6 +10,9 @@ const AppRoutes = {
   Logging: {
     Index: () => "/logging",
   },
+  Settings: {
+    Index: () => "/settings",
+  },
 };
 
 export default AppRoutes;

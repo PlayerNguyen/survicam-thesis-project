@@ -8,6 +8,7 @@ import MembersMain from "../pages/Members/Main";
 import AppRoutes from "../routes";
 import AppLayout from "../shared/components/AppLayout";
 import TokenStorage from "../utils/TokenStorage";
+import AppSettings from "../pages/Settings";
 
 export default function resolveRouter() {
   const router = TokenStorage.hasToken()
@@ -34,6 +35,10 @@ export default function resolveRouter() {
             {
               path: AppRoutes.Logging.Index(),
               element: <LoggingMain />,
+            },
+            {
+              path: AppRoutes.Settings.Index(),
+              element: <AppSettings />,
             },
           ],
         },

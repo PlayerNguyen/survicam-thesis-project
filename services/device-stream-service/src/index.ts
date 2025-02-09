@@ -1,6 +1,5 @@
 import app from "./app";
 
-console.log(Bun.env);
 const APP_PORT = Bun.env.APP_PORT || 3004;
 const _app = app.listen(APP_PORT);
 // console.log(_app.);

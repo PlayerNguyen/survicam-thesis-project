@@ -1,38 +1,75 @@
-import { useLocalStorage } from "@mantine/hooks";
-import { useContext, useEffect } from "react";
-import AuthContext from "../../contexts/AuthContext";
-import { AuthRequest } from "../request/auth";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  AuthRequest,
+  ChangePasswordRequestType,
+  LoginBodyRequestType,
+  RegisterBodyRequestType,
+  UpdateProfileRequestType,
+} from "../request/auth";
 
-export default function useAuthenticateRequest() {
-  const [userToken, _, removeUserToken] = useLocalStorage({
-    key: "user-token",
-  });
-  const { setAuth } = useContext(AuthContext);
+export default function useAuthRequest() {
+  const keys = {
+    getTokenInformation: "auth-api-get-token-information",
+    login: "post-api-auth-login",
+    register: "post-api-auth-register",
+    updateProfile: "put-api-auth-update-profile",
+    changePassword: "put-api-auth-change-password",
+  };
 
-  useEffect(() => {
-    console.log(`current token is: ${userToken}`);
-    if (!userToken) {
-      setAuth && setAuth({ isAuthenticated: false, isLoading: false });
-      return;
-    }
+  const queryClient = useQueryClient();
 
-    // send a request to auth
-    // setAuth && setAuth({ isAuthenticated: false, isLoading: true });
-    setTimeout(() => {
-      AuthRequest.getTokenInformation(userToken)
-        .then((res) => {
-          console.log(`Set auth to user:`, res.data.user);
+  function useQueryGetTokenInformation(token: string) {
+    return useQuery({
+      queryKey: [keys.getTokenInformation, token],
+      queryFn: () => AuthRequest.getTokenInformation(token),
+      enabled: !!token, // Only runs if the token is provided
+    });
+  }
 
-          setAuth &&
-            setAuth({
-              isAuthenticated: true,
-              isLoading: false,
-              user: res.data.user,
-            });
-        })
-        .catch((_) => {
-          removeUserToken();
-        });
-    }, 3000);
-  }, [userToken]);
+  function useMutateLogin() {
+    return useMutation({
+      mutationKey: [keys.login],
+      mutationFn: (body: LoginBodyRequestType) => AuthRequest.login(body),
+    });
+  }
+
+  function useMutateRegister() {
+    return useMutation({
+      mutationKey: [keys.register],
+      mutationFn: (body: RegisterBodyRequestType) => AuthRequest.register(body),
+    });
+  }
+
+  function useMutateUpdateProfile() {
+    return useMutation({
+      mutationKey: [keys.updateProfile],
+      mutationFn: ({
+        token,
+        body,
+      }: {
+        token: string;
+        body: UpdateProfileRequestType;
+      }) => AuthRequest.updateProfile(token, body),
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: [keys.getTokenInformation] });
+      },
+    });
+  }
+
+  function useMutateChangePassword() {
+    return useMutation({
+      mutationKey: [keys.changePassword],
+      mutationFn: ({ body }: { body: ChangePasswordRequestType }) =>
+        AuthRequest.changePassword(body),
+    });
+  }
+
+  return {
+    keys,
+    useQueryGetTokenInformation,
+    useMutateLogin,
+    useMutateRegister,
+    useMutateUpdateProfile,
+    useMutateChangePassword,
+  };
 }

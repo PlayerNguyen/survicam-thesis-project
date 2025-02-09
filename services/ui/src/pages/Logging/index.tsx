@@ -1,8 +1,8 @@
 import { Flex } from "@mantine/core";
-import LoggingList from "./components/LoggingList";
-import useLoggingRequest from "../../shared/hooks/useLoggingRequest";
-import { useSearchParams } from "react-router-dom";
 import { useDebouncedValue } from "@mantine/hooks";
+import { useSearchParams } from "react-router-dom";
+import useLoggingRequest from "../../shared/hooks/useLoggingRequest";
+import LoggingList from "./components/LoggingList";
 
 export default function LoggingMain() {
   const [searchParams] = useSearchParams();
@@ -30,7 +30,6 @@ export default function LoggingMain() {
           data={(loggingData && loggingData.data.loggings) || []}
           pagination={loggingData && loggingData.data.pages}
         />
-        {/* <b>b</b> */}
       </Flex>
     </>
   );

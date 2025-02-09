@@ -3,7 +3,6 @@ import {
   AspectRatio,
   Divider,
   Flex,
-  Image,
   Paper,
   Skeleton,
   Stack,

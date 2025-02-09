@@ -3,7 +3,6 @@ import {
   Button,
   Divider,
   Flex,
-  Loader,
   Pagination,
   Paper,
   ScrollArea,
@@ -171,15 +170,17 @@ export default function LoggingList(props: LoggingListType) {
         <Divider />
         {/* List */}
         <ScrollArea h={"70vh"}>
-          {props.isPending ? (
-            [...new Array(2)].map((_,idx) => {
-              return <LoggingItemSeketonItem key={`dummy-skeleton-logging-${idx}`} />
-            })
-          ) : (
-            props.data.map((logging: LoggingResult) => {
-              return <LoggingListItem item={logging} key={logging._id} />;
-            })
-          )}
+          {props.isPending
+            ? [...new Array(2)].map((_, idx) => {
+                return (
+                  <LoggingItemSeketonItem
+                    key={`dummy-skeleton-logging-${idx}`}
+                  />
+                );
+              })
+            : props.data.map((logging: LoggingResult) => {
+                return <LoggingListItem item={logging} key={logging._id} />;
+              })}
         </ScrollArea>
         <Pagination
           size={"sm"}

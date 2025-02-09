@@ -12,10 +12,15 @@ function setToken(value: any) {
   localStorage.setItem(TOKEN_KEY, value);
 }
 
+function deleteToken() {
+  localStorage.removeItem(TOKEN_KEY);
+}
+
 const TokenStorage = {
   getToken,
   hasToken,
   setToken,
+  deleteToken,
 };
 
 export default TokenStorage;

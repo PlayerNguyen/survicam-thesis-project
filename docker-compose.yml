@@ -147,7 +147,7 @@ services:
       MILVUS_CONNECTION_URI: "http://milvus-standalone:19530"
       RABBIT_MQ_FACE_RECOGNITION_EXCHANGE_NAME: "detect.recognition.direct"
       RABBIT_MQ_FACE_RECOGNITION_QUEUE_NAME: "face_recognition"
-      LOGGING_API_BASE_URL: "http://localhost:3042"
+      LOGGING_API_BASE_URL: "http://logging-service:3234"
     restart: always
     depends_on:
       - rabbitmq
@@ -168,6 +168,38 @@ services:
     restart: always
     ports:
       - 3015:3000
+    depends_on:
+      - mongodb
+    networks:
+      - app-network
+      - devices-network
+
+  user-service:
+    build: ./services/user-service
+    environment:
+      PORT: 3192
+      MONGODB_URI: "mongodb://root:example@mongodb:27017/users?authSource=admin"
+      JWT_SECRET_KEY: "e046dc12-31bf-47a2-ab6e-941e76272718"
+      JWT_TOKEN_EXPIRED_IN: "1200d"
+    restart: always
+    ports:
+      - 3192:3192
+    depends_on:
+      - mongodb
+    networks:
+      - app-network
+      - devices-network
+
+  logging-service:
+    build: ./services/logging-service
+    environment:
+      APP_PORT: 3234
+      MONGODB_CONNECTION_STRING: "mongodb://root:example@mongodb:27017/logging?authSource=admin"
+      # JWT_SECRET_KEY: "e046dc12-31bf-47a2-ab6e-941e76272718"
+      # JWT_TOKEN_EXPIRED_IN: "1200d"
+    restart: always
+    ports:
+      - 3234:3234
     depends_on:
       - mongodb
     networks:

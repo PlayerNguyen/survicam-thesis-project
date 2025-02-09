@@ -1,6 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { DeviceCreateDeviceRequestBody } from "../../types";
-import DeviceRequest from "../request/devices";
+import DeviceRequest, {
+  DeviceResponse,
+  GetListDeviceParams,
+} from "../request/devices";
 
 export default function useDeviceRequest() {
   const keys = {
@@ -9,14 +11,17 @@ export default function useDeviceRequest() {
     deleteDevice: "delete-api-delete-device",
     activeDevice: "post-active-device",
     deactivateDevice: "post-deactivate-device",
+    updateDevice: "put-api-update-device", // Added update key
   };
 
   const queryClient = useQueryClient();
 
-  function createQueryGetDeviceList() {
+  function createQueryGetDeviceList(params?: GetListDeviceParams) {
     return useQuery({
-      queryKey: [keys.getListDevices],
-      queryFn: () => DeviceRequest.getListDevices(),
+      queryKey: [keys.getListDevices, params],
+      queryFn: () => DeviceRequest.getListDevices(params),
+      placeholderData: (prev) => prev,
+      refetchOnWindowFocus: false,
     });
   }
 
@@ -25,6 +30,22 @@ export default function useDeviceRequest() {
       mutationKey: [keys.createDevice],
       mutationFn: (body: DeviceCreateDeviceRequestBody) =>
         DeviceRequest.createDevice(body),
+    });
+  }
+
+  function createMutateUpdateDevice() {
+    return useMutation({
+      mutationKey: [keys.updateDevice], // Added mutation key
+      mutationFn: ({
+        id,
+        body,
+      }: {
+        id: string;
+        body: Partial<DeviceResponse>;
+      }) => DeviceRequest.updateDevice(id, body),
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: [keys.getListDevices] });
+      },
     });
   }
 
@@ -47,9 +68,10 @@ export default function useDeviceRequest() {
       },
     });
   }
+
   function createMutateDeactivateDevice() {
     return useMutation({
-      mutationKey: [keys.activeDevice],
+      mutationKey: [keys.deactivateDevice],
       mutationFn: (id: string) => DeviceRequest.deactivateDevice(id),
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: [keys.getListDevices] });
@@ -61,6 +83,7 @@ export default function useDeviceRequest() {
     keys,
     createQueryGetDeviceList,
     createMutateCreateDevice,
+    createMutateUpdateDevice,
     createMutateDeleteDevice,
     createMutateActiveDevice,
     createMutateDeactivateDevice,

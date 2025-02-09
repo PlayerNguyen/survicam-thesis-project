@@ -16,6 +16,7 @@ import {
   RiSettings2Line,
   RiSunLine,
 } from "react-icons/ri";
+import AppHeaderMenuTrigger from "./components/AppHeaderMenuTrigger";
 
 export default function AppHeader() {
   const { setColorScheme, colorScheme } = useMantineColorScheme();
@@ -24,10 +25,10 @@ export default function AppHeader() {
       colorScheme === "auto"
         ? "light"
         : colorScheme === "light"
-        ? "dark"
-        : colorScheme === "dark"
-        ? "auto"
-        : "light"
+          ? "dark"
+          : colorScheme === "dark"
+            ? "auto"
+            : "light",
     );
   }
   return (
@@ -63,7 +64,12 @@ export default function AppHeader() {
           </Popover>
         </Flex>
 
-        <Flex justify={"end"} align={`end`} className={clsx(`flex-1`)}>
+        <Flex
+          justify={"end"}
+          align={`center`}
+          className={clsx(`flex-1`)}
+          gap={"md"}
+        >
           <ActionIcon onClick={handleChangeTheme}>
             {colorScheme === "auto" ? (
               <RiSettings2Line />
@@ -73,6 +79,7 @@ export default function AppHeader() {
               <RiMoonLine />
             )}
           </ActionIcon>
+          <AppHeaderMenuTrigger />
         </Flex>
       </Group>
     </Paper>
