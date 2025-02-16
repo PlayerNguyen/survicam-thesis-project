@@ -4,12 +4,9 @@ from pymilvus import (
     CollectionSchema,
     FieldSchema,
     DataType,
-    Collection,
-    Index,
 )
 import os
 import numpy as np
-import cv2
 import time
 import uuid
 
@@ -64,11 +61,6 @@ history_face_embeddings_schema = CollectionSchema(
         FieldSchema("id", dtype=DataType.VARCHAR, is_primary=True, max_length=36),
         FieldSchema("owner", dtype=DataType.VARCHAR, max_length=36),
         FieldSchema(
-            "image",
-            dtype=DataType.VARCHAR,
-            max_length=65535,
-        ),
-        FieldSchema(
             "embedding",
             dtype=DataType.FLOAT_VECTOR,
             dim=512,
@@ -101,6 +93,7 @@ client.create_index(
     index_params=history_face_embedding_params,
     sync=False,
 )
+
 
 async def get_all_members(limit: int = 12, page: int = 1, **kwargs):
     client.load_collection(PRIMARY_EMBEDDING_COLLECTION_NAME)

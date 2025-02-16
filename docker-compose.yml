@@ -108,6 +108,7 @@ services:
       - MILVUS_CONNECTION_URI=http://milvus-standalone:19530
       - PRIMARY_EMBEDDING_COLLECTION_NAME=primary_face_embeddings
       - HISTORY_FACE_COLLECTION_NAME=history_face_embeddings
+      - MONGO_URI=mongodb://root:example@mongodb:27017/devices?authSource=admin
     deploy:
       replicas: 1
       resources:

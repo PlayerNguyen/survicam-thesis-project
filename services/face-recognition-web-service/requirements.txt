@@ -5,3 +5,4 @@ python-multipart
 pymilvus==2.4.9
 python-dotenv
 uvicorn[standard]
+pymongo

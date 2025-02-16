@@ -1,4 +1,4 @@
-import { Pill, Skeleton } from "@mantine/core";
+import { Flex, Pill, Skeleton } from "@mantine/core";
 import useMemberRequest from "../../../../shared/hooks/useMemberRequest";
 
 export type LoggingItemPredictingDisplayerProps = {
@@ -13,12 +13,24 @@ export default function LoggingItemPredictingDisplayer(
   );
 
   if (props.id === null) {
-    return <Pill>Unknown</Pill>;
+    return (
+      <Flex justify={`end`}>
+        <Pill bg={"yellow.5"} c={"black"} size="xs">
+          Unknown
+        </Pill>
+      </Flex>
+    );
   }
 
   if (isPending) {
     return <Skeleton h={14} />;
   }
 
-  return <Pill>{data?.data.member.name}</Pill>;
+  return (
+    <Flex justify={`end`}>
+      <Pill bg={props.id === null ? "red.5" : "green.5"} c={"black"} size="xs">
+        {data?.data.member.name}
+      </Pill>
+    </Flex>
+  );
 }

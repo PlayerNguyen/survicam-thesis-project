@@ -46,7 +46,8 @@ function SearchFaceMemberResultItemInfoPill({
               <Skeleton>Nguyen Huynh Nguyen (0.75)</Skeleton>
             )) || (
               <Skeleton visible={loadingMemberData}>
-                {memberData?.data.member.name} ({distance?.toLocaleString()})
+                {memberData && memberData.member.name} (
+                {distance?.toLocaleString()})
               </Skeleton>
             )}
           </Text>

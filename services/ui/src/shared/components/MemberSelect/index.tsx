@@ -4,7 +4,8 @@ import useMemberRequest from "../../hooks/useMemberRequest";
 export type MemberSelectProps = SelectProps;
 
 export default function MemberSelect(props: MemberSelectProps) {
-  const { data: members, isPending } = useMemberRequest().createQueryGetAllMembers();
+  const { data: members, isPending } =
+    useMemberRequest().createQueryGetAllMembers();
 
   const data: SelectProps["data"] = isPending
     ? []

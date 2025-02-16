@@ -48,7 +48,7 @@ export default function AppHeader() {
         </Button>
         {/*  */}
         <Flex>
-          <Popover>
+          {/* <Popover>
             <Popover.Target>
               <Button size="compact-xs" variant="subtle">
                 Device
@@ -61,7 +61,7 @@ export default function AppHeader() {
                 </Button>
               </Stack>
             </Popover.Dropdown>
-          </Popover>
+          </Popover> */}
         </Flex>
 
         <Flex

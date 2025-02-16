@@ -24,7 +24,7 @@ export type LoggingListItemProps = {
 export default function LoggingListItem(props: LoggingListItemProps) {
   return (
     <Paper
-      className={clsx(``)}
+      
       w={`100%`}
       shadow="md"
       withBorder

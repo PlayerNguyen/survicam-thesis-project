@@ -22,7 +22,7 @@ export default function resolveRouter() {
           children: [
             {
               index: true,
-              element: <>zhi</>,
+              element: <DeviceMain />,
             },
             {
               path: AppRoutes.Device.Index(),

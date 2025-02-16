@@ -36,7 +36,7 @@ export default function UpdateFaceMemberModal({
     useMemberRequest().createMutateUploadAsset();
   const queryClient = useQueryClient();
   const { data: memberData, isFetching: isMemberDataFetching } =
-    useMemberRequest().createQueryGetMemberById((member && member.id) || null);
+    useMemberRequest().createQueryGetMemberById((member && member._id) || null);
   const { keys } = useMemberRequest();
   const handleFileChange = (files: File[]) => {
     console.log(files);
@@ -48,20 +48,24 @@ export default function UpdateFaceMemberModal({
     if (member === undefined)
       throw new Error(`Unable to get the id from undefined member.`);
 
-    uploadFaceImageAsset({ id: member?.id, files: files })
+    uploadFaceImageAsset({ id: member?._id, files: files })
       .then(() => {
         toast.success(
           `Successfully update the face of member's ${member.name}`
         );
         queryClient.invalidateQueries({
-          queryKey: [keys.getMemberById, member.id],
+          queryKey: [keys.getMemberById, member._id],
         });
+
+        // Clean up
         setFiles([]);
       })
       .catch((err) => {
         toast.error(`${err.message}. [${err.response.data.detail.message}]`);
       });
   };
+
+  console.log(memberData);
 
   return (
     <Modal
@@ -74,7 +78,9 @@ export default function UpdateFaceMemberModal({
         </Text>
       }
     >
-      <Paper>{(member && member.name) || "Undefined user name"}</Paper>
+      <Paper>
+        <b>Username</b>: {(member && member.name) || "Undefined user name"}
+      </Paper>
       <Divider my={`md`} />
       <Flex direction={"column"} gap={"xs"} my="md">
         <Text size="xl" fw={"bold"}>
@@ -140,15 +146,17 @@ export default function UpdateFaceMemberModal({
           [...Array(12)].map(() => {
             return <Image src={`https://placehold.co/600x400`} />;
           })
-        ) : memberData!.data.history.length === 0 ? (
+        ) : memberData!.member.resources !== undefined &&
+          memberData!.member.resources.length === 0 ? (
           <>Empty</>
         ) : (
-          memberData.data.history.map((image) => (
+          memberData.member.resources !== undefined &&
+          memberData!.member.resources.map((image) => (
             <AspectRatio ratio={1 / 1}>
               <Image
                 src={`${
-                  import.meta.env.VITE_API_GATEWAY_BASE_URL
-                }/faces/assets/${image.image}`}
+                  import.meta.env.VITE_API_FACE_RECOGNITION_URL
+                }/members/${memberData.member._id}/resources/${image._id}`}
               />
             </AspectRatio>
           ))

@@ -7,6 +7,7 @@ import {
   Paper,
   ScrollArea,
   Select,
+  Text,
   TextInput,
   Title,
 } from "@mantine/core";
@@ -50,7 +51,7 @@ export default function LoggingList(props: LoggingListType) {
   return (
     <Paper
       className={clsx(``)}
-      w={{ base: "100%", sm: `50%`, md: `60%` }}
+      w={{ base: "100%", sm: `90%`, md: `60%`, xl: "50%" }}
       shadow="md"
       withBorder
       radius={"md"}
@@ -136,6 +137,7 @@ export default function LoggingList(props: LoggingListType) {
                     return params;
                   });
                 }}
+                defaultValue={searchParams.get("predicted") || undefined}
                 onChange={(value) =>
                   handleChangeSearchParams("predicited", value)
                 }
@@ -169,7 +171,7 @@ export default function LoggingList(props: LoggingListType) {
 
         <Divider />
         {/* List */}
-        <ScrollArea h={"70vh"}>
+        <ScrollArea h={"70vh"} px={12}>
           {props.isPending
             ? [...new Array(2)].map((_, idx) => {
                 return (
@@ -182,14 +184,20 @@ export default function LoggingList(props: LoggingListType) {
                 return <LoggingListItem item={logging} key={logging._id} />;
               })}
         </ScrollArea>
-        <Pagination
-          size={"sm"}
-          total={props.pagination?.totalPages || 1}
-          onChange={(page) => handleChangeSearchParams("page", String(page))}
-          value={
-            (searchParams.get("page") && Number(searchParams.get("page"))) || 1
-          }
-        />
+        <Flex gap={"sm"} align={"center"}>
+          <Pagination
+            size={"sm"}
+            total={props.pagination?.totalPages || 1}
+            onChange={(page) => handleChangeSearchParams("page", String(page))}
+            value={
+              (searchParams.get("page") && Number(searchParams.get("page"))) ||
+              1
+            }
+          />
+          <Text size="xs" fw={"semibold"}>
+            Captured {props.pagination?.totalItems} records
+          </Text>
+        </Flex>
       </Flex>
     </Paper>
   );

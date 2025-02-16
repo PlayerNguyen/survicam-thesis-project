@@ -2,11 +2,12 @@
 
 import axios from "axios";
 
-const VITE_API_FACE_RECOGNITION_URL = import.meta.env.VITE_API_FACE_RECOGNITION_URL
+const VITE_API_FACE_RECOGNITION_URL = import.meta.env
+  .VITE_API_FACE_RECOGNITION_URL;
 
 const axiosInstance = axios.create({
   baseURL: VITE_API_FACE_RECOGNITION_URL,
-})
+});
 
 export type GetAllMembersParams = Partial<{
   limit: number;
@@ -14,24 +15,35 @@ export type GetAllMembersParams = Partial<{
 }>;
 
 export type MemberResponse = {
-  id: string;
+  _id: string;
+  avatar: string | null;
   name: string;
   updated_at: number;
+  createdAt: string;
+  updatedAt: string;
+  resources: {
+    _id: string;
+    imageAbsolutePath: string;
+    resourceRef: string;
+    createdAt: string;
+    updatedAt: string;
+  }[];
 };
 
 export type GetAllMembersResponse = {
-  success: true;
-  data: {
-    members: MemberResponse[];
-    total: number;
-  };
+  // success: true;
+  // data: {
+
+  //   total: number;
+  // };
+  members: MemberResponse[];
 };
 
 async function getAllMembers(
   params?: GetAllMembersParams,
   signal?: AbortSignal
 ): Promise<GetAllMembersResponse> {
-  return (await axiosInstance.get(`/members/`, { params, signal })).data;
+  return (await axiosInstance.get(`/members`, { params, signal })).data;
 }
 
 export type CreateEmptyMemberParams = {
@@ -44,7 +56,7 @@ async function createEmptyMember(
 ): Promise<{}> {
   return (
     await axiosInstance.post(
-      `/members/`,
+      `/members`,
       { name: params.name },
       {
         signal,
@@ -70,7 +82,7 @@ async function uploadFaceImageAssets(
   }
 
   return (
-    await axiosInstance.post(`/members/${params.id}`, formData, {
+    await axiosInstance.put(`/members/${params.id}/resources`, formData, {
       signal,
       headers: {
         "Content-Type": "multipart/form-data",
@@ -85,14 +97,14 @@ export type GetMemberByIdHistory = {
   owner: string;
 };
 export type GetMemberByIdResponse = {
-  sucess: true;
-  data: {
-    history: GetMemberByIdHistory[];
-    member: {
-      id: string;
-      name: string;
-      updated_at: number;
-    };
+  member: {
+    avatar: string | null;
+    name: string;
+    _id: string;
+    resources: {
+      _id: string;
+      resourceRef: string;
+    }[];
   };
 };
 

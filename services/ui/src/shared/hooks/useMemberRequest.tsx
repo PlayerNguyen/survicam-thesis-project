@@ -25,6 +25,8 @@ export default function useMemberRequest() {
         params?.limit || 1,
       ],
       queryFn: (ctx) => MemberRequest.getAllMembers(params, ctx.signal),
+      placeholderData: (prev) => prev,
+      refetchOnWindowFocus: false,
     });
   }
 

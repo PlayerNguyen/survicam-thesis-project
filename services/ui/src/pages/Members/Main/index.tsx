@@ -6,7 +6,6 @@ import {
   Paper,
   SimpleGrid,
   Stack,
-  TextInput,
   Title,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
@@ -58,7 +57,7 @@ export default function MembersMain() {
       toast.success(`Created a new member`);
     } catch (err) {
       toast.error(
-        `Cannot create a new member. Because ${(err as unknown as any).message}`
+        `Cannot create a new member. Because ${(err as Error).message}`
       );
     }
   };
@@ -86,11 +85,11 @@ export default function MembersMain() {
         <Title order={4}>Members</Title>
 
         <Group className="flex-1" justify="end">
-          <TextInput
+          {/* <TextInput
             leftSection={<RiUserSearchLine />}
             placeholder="Search by user's name"
             radius={"xl"}
-          />
+          /> */}
           <Button
             radius={"xl"}
             leftSection={<RiUserSearchLine size={16} />}
@@ -115,7 +114,7 @@ export default function MembersMain() {
               <MemberCard isLoading key={`dummy-member-card-key-index-${__}`} />
             ))}
           </SimpleGrid>
-        ) : members && members.data.members.length === 0 ? (
+        ) : members && members.members.length === 0 ? (
           <Flex
             mih={"70vh"}
             justify={`center`}
@@ -130,11 +129,11 @@ export default function MembersMain() {
           </Flex>
         ) : (
           <SimpleGrid className="flex-1" cols={4}>
-            {members!.data.members.map((member) => (
+            {members!.members.map((member) => (
               <MemberCard
                 isLoading={false}
                 member={member}
-                key={`member-card-with-id-${member.id}`}
+                key={`member-card-with-id-${member._id}`}
                 onClickUpdateFaceButton={handleClickUpdateFaceButton}
               />
             ))}
