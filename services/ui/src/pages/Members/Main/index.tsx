@@ -47,6 +47,8 @@ export default function MembersMain() {
 
   const { mutateAsync: createEmptyMemberAsync } =
     useMemberRequest().createMutateCreateEmptyMember();
+  const { mutateAsync: deleteMember } =
+    useMemberRequest().createMutateDeleteMember();
   const [searchFaceModalOpened, searchFaceModalActions] = useDisclosure();
 
   const handleCreateMember = async (values: CreateEmptyMemberFormTypes) => {
@@ -58,6 +60,18 @@ export default function MembersMain() {
     } catch (err) {
       toast.error(
         `Cannot create a new member. Because ${(err as Error).message}`
+      );
+    }
+  };
+
+  const handleDeleteMember = async (member: MemberResponse) => {
+    try {
+      await deleteMember(member._id);
+      queryClient.invalidateQueries({ queryKey: [keys.getAllMembers] });
+      toast.success(`Deleted the member`);
+    } catch (err) {
+      toast.error(
+        `Cannot delete the member. Because ${(err as Error).message}`
       );
     }
   };
@@ -135,6 +149,7 @@ export default function MembersMain() {
                 member={member}
                 key={`member-card-with-id-${member._id}`}
                 onClickUpdateFaceButton={handleClickUpdateFaceButton}
+                onClickDelete={handleDeleteMember}
               />
             ))}
           </SimpleGrid>

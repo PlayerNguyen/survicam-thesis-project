@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { DeviceCreateDeviceRequestBody } from "../../types";
 import DeviceRequest, {
   DeviceResponse,
   GetListDeviceParams,

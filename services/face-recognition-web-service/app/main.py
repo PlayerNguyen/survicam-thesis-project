@@ -45,5 +45,5 @@ if __name__ == "__main__":
         host=os.getenv("APP_HOST"),
         port=int(os.getenv("APP_PORT", default="80")),
         reload=True,
-        root_path="/api/faces",
+        root_path=os.getenv("APP_ROOT_ENDPOINT", ""),
     )

@@ -12,6 +12,7 @@ export default function useMemberRequest() {
     createEmptyMember: "post-create-empty-member",
     uploadAssetMember: "post-upload-asset-member",
     searchMember: "post-search-members",
+    deleteMember: "delete-member",
   };
   const queryClient = useQueryClient();
 
@@ -73,6 +74,13 @@ export default function useMemberRequest() {
     });
   }
 
+  function createMutateDeleteMember() {
+    return useMutation({
+      mutationKey: [keys.deleteMember],
+      mutationFn: (id: string) => MemberRequest.deleteMember(id),
+    });
+  }
+
   return {
     keys,
     createQueryGetAllMembers,
@@ -80,5 +88,6 @@ export default function useMemberRequest() {
     createMutateUploadAsset,
     createQueryGetMemberById,
     createMutateSearchMember,
+    createMutateDeleteMember,
   };
 }

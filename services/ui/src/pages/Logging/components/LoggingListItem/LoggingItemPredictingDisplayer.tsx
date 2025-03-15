@@ -6,10 +6,10 @@ export type LoggingItemPredictingDisplayerProps = {
 };
 
 export default function LoggingItemPredictingDisplayer(
-  props: LoggingItemPredictingDisplayerProps,
+  props: LoggingItemPredictingDisplayerProps
 ) {
   const { isPending, data } = useMemberRequest().createQueryGetMemberById(
-    props.id,
+    props.id
   );
 
   if (props.id === null) {
@@ -29,7 +29,7 @@ export default function LoggingItemPredictingDisplayer(
   return (
     <Flex justify={`end`}>
       <Pill bg={props.id === null ? "red.5" : "green.5"} c={"black"} size="xs">
-        {data?.data.member.name}
+        {data?.member.name}
       </Pill>
     </Flex>
   );

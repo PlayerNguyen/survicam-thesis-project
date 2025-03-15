@@ -9,7 +9,6 @@ import {
   Paper,
   Popover,
   Skeleton,
-  Stack,
   Text,
 } from "@mantine/core";
 import clsx from "clsx";
@@ -164,7 +163,7 @@ export default function DeviceInfoCard({
                       onClick={() => {
                         if (!onEdit) {
                           throw new Error(
-                            `onEdit is not assigned to the current component`,
+                            `onEdit is not assigned to the current component`
                           );
                         }
 

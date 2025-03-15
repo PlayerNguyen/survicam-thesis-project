@@ -126,11 +126,15 @@ def get_member_by_id(memberId: str):
 
 @router.delete("/members/{memberId}")
 def soft_delete_member(memberId: str):
-    result = collection.update_one({"_id": memberId}, {"$set": {"deleted": True}})
+    try:
+        object_id = ObjectId(memberId)
+    except Exception:
+        raise HTTPException(status_code=400, detail="Invalid member ID format")
+
+    result = collection.update_one({"_id": object_id}, {"$set": {"deleted": True}})
     if result.matched_count == 0:
         raise HTTPException(status_code=404, detail="Member not found")
     return {"message": "Member soft-deleted successfully"}
-
 
 @router.post("/members/search")
 async def search_test(files: List[UploadFile] = File(...)):

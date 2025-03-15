@@ -148,12 +148,17 @@ async function postSearchMemberViaImages(
   ).data;
 }
 
+async function deleteMember(id: string) {
+  return await axiosInstance.delete(`/members/${id}`)
+}
+
 const MemberRequest = {
   getAllMembers,
   createEmptyMember,
   uploadFaceImageAssets,
   getMemberById,
   postSearchMemberViaImages,
+  deleteMember,
 };
 
 export default MemberRequest;

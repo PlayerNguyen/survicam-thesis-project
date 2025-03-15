@@ -56,6 +56,7 @@ def process_image(image):
 
         # Combine response data with image Base64 for the POST request
         combined_data = {'similarity': response_data, 'image': image_base64, 'predict_result': single_similarity_result}
+        print(combined_data)
         logging.info(f"The similarity response data: {response_data}")
         logging.info(f"Start sending a HTTP request to {LOGGING_API_BASE_URL}/logging/")
         # Send POST request

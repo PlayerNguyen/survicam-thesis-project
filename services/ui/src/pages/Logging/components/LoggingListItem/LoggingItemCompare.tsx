@@ -8,7 +8,7 @@ export type LoggingItemCompareType = {
 
 export default function LoggingItemCompare(props: LoggingItemCompareType) {
   const { data, isPending } = useMemberRequest().createQueryGetMemberById(
-    props.id,
+    props.id
   );
 
   if (isPending) {
@@ -26,7 +26,7 @@ export default function LoggingItemCompare(props: LoggingItemCompareType) {
 
   return (
     <Table.Tr>
-      <Table.Td>{data?.data.member.name}</Table.Td>
+      <Table.Td>{data !== undefined ? data!.member.name : "Unknown"}</Table.Td>
       <Table.Td>{props.distance.toFixed(4)}</Table.Td>
     </Table.Tr>
     // <Flex direction="column">
