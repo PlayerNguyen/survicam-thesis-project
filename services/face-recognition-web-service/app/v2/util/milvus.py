@@ -194,7 +194,7 @@ async def add_history_embedding(
             {
                 "id": str(id),
                 "owner": owner,
-                # "image": image,
+                "image": "",
                 "embedding": embedding.tolist(),
                 "created_at": int(time.time()),
             }
@@ -278,3 +278,34 @@ async def find_similarity(data: list[list], radius: float = 0.56):
         data=data,
         search_params={"params": {"radius": radius}},
     )
+
+
+async def remove_member_from_milvus(member_id: str):
+    """
+    Removes a member from Milvus, deleting both their primary embeddings
+    and all related history face embeddings.
+    """
+    client.load_collection(PRIMARY_EMBEDDING_COLLECTION_NAME, timeout=100)
+    client.load_collection(HISTORY_FACE_COLLECTION_NAME, timeout=100)
+
+    # Remove history embeddings related to the member
+    history_deletion_result = client.delete(
+        HISTORY_FACE_COLLECTION_NAME, 
+        filter=f'owner=="{member_id}"'
+    )
+
+    # Remove primary embedding of the member
+    primary_deletion_result = client.delete(
+        PRIMARY_EMBEDDING_COLLECTION_NAME, 
+        ids=[member_id]
+    )
+
+    logger.info(f"Deleted member {member_id} from Milvus.")
+    logger.info(f"History deletion result: {history_deletion_result}")
+    logger.info(f"Primary embedding deletion result: {primary_deletion_result}")
+
+    return {
+        "message": f"Member {member_id} and related history removed successfully",
+        "history_deletion_result": history_deletion_result,
+        "primary_deletion_result": primary_deletion_result,
+    }

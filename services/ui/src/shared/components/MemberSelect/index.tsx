@@ -11,8 +11,8 @@ export default function MemberSelect(props: MemberSelectProps) {
     ? []
     : [
         { value: "null", label: "Unknown" },
-        ...(members?.data?.members?.map((member) => ({
-          value: String(member.id), // Ensure value is a string
+        ...(members?.members?.map((member) => ({
+          value: String(member._id), // Ensure value is a string
           label: member.name,
         })) || []), // Fallback to an empty array if undefined
       ];

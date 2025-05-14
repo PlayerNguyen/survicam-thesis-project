@@ -125,13 +125,14 @@ def get_member_by_id(memberId: str):
 
 
 @router.delete("/members/{memberId}")
-def soft_delete_member(memberId: str):
+async def soft_delete_member(memberId: str):
     try:
         object_id = ObjectId(memberId)
     except Exception:
         raise HTTPException(status_code=400, detail="Invalid member ID format")
 
     result = collection.update_one({"_id": object_id}, {"$set": {"deleted": True}})
+    await milvusUtil.remove_member_from_milvus(memberId)
     if result.matched_count == 0:
         raise HTTPException(status_code=404, detail="Member not found")
     return {"message": "Member soft-deleted successfully"}

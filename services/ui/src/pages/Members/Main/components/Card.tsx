@@ -30,7 +30,9 @@ export default function MemberCard({
     <Paper withBorder p={12} radius={"md"}>
       <AspectRatio ratio={1}>
         {/* <Image src={`https://placehold.co/800x600?text=Unknown+Faces`} /> */}
-        {!member || member.resources.length === 0 ? (
+        {!member ||
+        member.resources === undefined ||
+        member.resources.length === 0 ? (
           <Image src={`https://placehold.co/800x600?text=Unknown+Faces`} />
         ) : (
           <Image
@@ -49,8 +51,9 @@ export default function MemberCard({
           </Text>
           <Text size="xs">
             <Skeleton visible={isLoading}>
-              {(member && member?.resources.length) || "Unregistered"} faces
-              registered
+              {(member && member.resources && member?.resources.length) ||
+                "Unregistered"}{" "}
+              faces registered
             </Skeleton>
           </Text>
         </Stack>

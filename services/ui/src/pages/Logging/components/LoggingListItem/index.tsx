@@ -10,11 +10,10 @@ import {
   Text,
   Tooltip,
 } from "@mantine/core";
-import clsx from "clsx";
-import { LoggingResult } from "../../../../shared/request/logging";
 import dayjs from "dayjs";
-import LoggingItemCompare from "./LoggingItemCompare";
 import { RiQuestionMark } from "react-icons/ri";
+import { LoggingResult } from "../../../../shared/request/logging";
+import LoggingItemCompare from "./LoggingItemCompare";
 import LoggingItemPredictingDisplayer from "./LoggingItemPredictingDisplayer";
 
 export type LoggingListItemProps = {
@@ -23,15 +22,7 @@ export type LoggingListItemProps = {
 
 export default function LoggingListItem(props: LoggingListItemProps) {
   return (
-    <Paper
-      
-      w={`100%`}
-      shadow="md"
-      withBorder
-      radius={"md"}
-      p={"xs"}
-      mb={"md"}
-    >
+    <Paper w={`100%`} shadow="md" withBorder radius={"md"} p={"xs"} mb={"md"}>
       <Flex gap={"sm"} direction={"column"}>
         {/* Header */}
         <Flex>

@@ -4,8 +4,6 @@ import {
   Flex,
   Group,
   Paper,
-  Popover,
-  Stack,
   Title,
   useMantineColorScheme,
 } from "@mantine/core";
@@ -25,10 +23,10 @@ export default function AppHeader() {
       colorScheme === "auto"
         ? "light"
         : colorScheme === "light"
-          ? "dark"
-          : colorScheme === "dark"
-            ? "auto"
-            : "light",
+        ? "dark"
+        : colorScheme === "dark"
+        ? "auto"
+        : "light"
     );
   }
   return (

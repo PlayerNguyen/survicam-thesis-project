@@ -12,7 +12,7 @@ import { useMutation } from "@tanstack/react-query";
 import clsx from "clsx";
 import toast from "react-hot-toast";
 import { RiLoginBoxFill, RiUser2Fill } from "react-icons/ri";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   AuthRequest,
   LoginBodyRequestType,
@@ -25,8 +25,6 @@ export type LoginFormType = {
 };
 
 export default function Login() {
-  const navigate = useNavigate();
-
   const [_, setToken] = useLocalStorage({ key: TOKEN_KEY });
   const { mutateAsync: loginAsync, isPending } = useMutation({
     mutationFn: (args: LoginBodyRequestType) =>

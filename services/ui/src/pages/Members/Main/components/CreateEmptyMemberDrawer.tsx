@@ -2,7 +2,6 @@ import {
   Button,
   Drawer,
   DrawerProps,
-  FileInput,
   Flex,
   Group,
   Text,
@@ -52,7 +51,7 @@ export default function CreateEmptyMemberDrawer({
             {...form.getInputProps("name")}
           />
 
-          <FileInput label={`Avatar`} />
+          {/* <FileInput label={`Avatar`} /> */}
           <Group justify="end">
             <Button
               type="submit"

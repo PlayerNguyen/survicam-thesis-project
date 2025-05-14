@@ -11,6 +11,14 @@ def truncate_mongodb():
     for collection_name in db.list_collection_names():
         db[collection_name].delete_many({})  # Truncate collection
         print(f"Truncated collection: {collection_name}")
+        
+    db1 = client["logging"]
+    
+    for collection_name in db1.list_collection_names():
+        db[collection_name].delete_many({})  # Truncate collection
+        print(f"Truncated collection: {collection_name}")
+        
+    
 
     print("All collections in 'members' database have been truncated.")
 
