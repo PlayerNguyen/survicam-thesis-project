@@ -1,0 +1,17 @@
+{
+  "name": "survicam-monorepo",
+  "private": true,
+  "scripts": {
+    "start:rtsp": "./scripts/start-cast-webcam.sh",
+    "start:webcam": "./scripts/start-publish.sh",
+    "start": "concurrently \"bun run start:rtsp\" \"bun run start:webcam\"",
+    "up": "docker-compose up --build -d",
+    "dev:user-service": "cd ./services/user-service && bun run dev",
+    "dev:ui": "cd ./services/ui && bun run dev",
+    "dev:web": "concurrently \"bun run dev:user-service\" \"bun run dev:ui\""
+  },
+  "dependencies": {
+    "@elysiajs/static": "^1.2.0",
+    "concurrently": "^9.1.0"
+  }
+}

@@ -7,6 +7,7 @@ import pika
 import os
 import json
 import datetime
+import logging
 
 import pika.exceptions
 
@@ -17,6 +18,8 @@ class Observer(Thread):
         self.uri = uri
         self.device = device
         self.cancelled = False
+        # self.logger = logging.Logger(f"Observer#{str(self.device["_id"])}")
+        self.logger = logging.getLogger("uvicorn.error")
 
     def send_to_message_queue(self, body):
         _ = json.dumps(
@@ -27,13 +30,17 @@ class Observer(Thread):
             },
             default=str,
         )
-
+        # self.logger.debug(f"[Observer#{str(self.device["_id"])}] send = {len(_)} bytes")
         self.channel.basic_publish(
             exchange="device.detect.direct", routing_key="face_detect", body=_
         )
 
     def run(self):
-        cap = cv2.VideoCapture(self.uri)
+        uri = int(self.uri) if self.uri.isnumeric() else str(self.uri)
+        cap = cv2.VideoCapture(uri if uri != "internal" else 0)
+        self.logger.debug(
+            f"[Observer#{str(self.device["_id"])}] uri={uri}; cap={cap}; start sending to message queue"
+        )
         self.connection = pika.BlockingConnection(
             parameters=pika.URLParameters(
                 os.getenv("RABBIT_MQ_URI", "amqp://user:password@localhost:5672/%2F")

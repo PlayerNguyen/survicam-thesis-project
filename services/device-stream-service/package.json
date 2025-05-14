@@ -1,0 +1,24 @@
+{
+  "name": "device-stream-service",
+  "module": "index.ts",
+  "type": "module",
+  "scripts": {
+    "dev": "bun --watch run src/index.ts",
+    "build:rtsp2mq": "./micro-app/rtsp2mq-adapter/scripts/build-app.sh"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/mime-types": "^2.1.4"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@elysiajs/cors": "^1.2.0",
+    "@elysiajs/swagger": "^1.2.0",
+    "chalk": "^5.4.1",
+    "elysia": "^1.2.10",
+    "mime-types": "^2.1.35",
+    "mongoose": "^8.9.5"
+  }
+}

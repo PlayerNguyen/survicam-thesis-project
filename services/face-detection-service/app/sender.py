@@ -21,7 +21,7 @@ class Sender:
         )
 
     def post(self, body):
-        body = json.dumps(body, default=str)
+        body = json.dumps(body, default=str, separators=(",", ":"))
         channel.basic_publish(
             exchange=RECOGNITION_EXCHANGE_KEY, body=body, routing_key="face_recognition"
         )

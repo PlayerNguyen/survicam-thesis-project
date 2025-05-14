@@ -1,0 +1,6 @@
+
+facenet-pytorch
+pika
+python-dotenv
+opencv-python-headless
+pymilvus
