@@ -1,0 +1,20 @@
+{
+  "name": "user-service",
+  "version": "1.0.50",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "bun run --watch src/index.ts"
+  },
+  "dependencies": {
+    "@bogeychan/elysia-logger": "^0.1.6",
+    "@elysiajs/cors": "^1.2.0",
+    "elysia": "latest",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.9.1"
+  },
+  "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.7",
+    "bun-types": "latest"
+  },
+  "module": "src/index.js"
+}
