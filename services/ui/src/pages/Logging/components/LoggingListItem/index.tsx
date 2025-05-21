@@ -95,15 +95,19 @@ export default function LoggingListItem(props: LoggingListItemProps) {
                 </Table.Tr>
               </Table.Thead>
               <Table.Tbody>
-                {props.item.result.map((member) => {
-                  return (
-                    <LoggingItemCompare
-                      id={member.id}
-                      key={`member-${member.id}`}
-                      distance={member.distance}
-                    />
-                  );
-                })}
+                {Array.isArray(props.item?.result) &&
+                  props.item.result.map((member) => {
+                    if (!member?.id || member.distance === undefined)
+                      return null;
+
+                    return (
+                      <LoggingItemCompare
+                        id={member.id}
+                        key={`member-${member.id}`}
+                        distance={member.distance}
+                      />
+                    );
+                  })}
               </Table.Tbody>
             </Table>
           </Flex>

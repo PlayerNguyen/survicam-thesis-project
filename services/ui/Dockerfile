@@ -19,6 +19,14 @@ RUN cd /temp/prod && bun install --frozen-lockfile --production
 FROM base AS prerelease
 COPY --from=install /temp/dev/node_modules node_modules
 COPY . . 
+
+ENV VITE_API_GATEWAY_BASE_URL="http://localhost/api"
+ENV VITE_API_GATEWAY_AUTH="http://localhost:3192/auth/"
+ENV VITE_API_FACE_RECOGNITION_URL="http://localhost:8555/v2"
+ENV VITE_API_DEVICE_URL="http://localhost:3015"
+ENV VITE_API_DEVICE_STREAM_URL="http://localhost:3072/"
+ENV VITE_API_LOGGING_URL="http://localhost:3234"
+
 ENV NODE_ENV=production
 RUN bun run build
 
