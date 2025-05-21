@@ -13,18 +13,13 @@ load_dotenv()
 
 app = FastAPI(root_path="/api/faces", redirect_slashes=False)
 
-origins = [
-    # "*",
-    "http://localhost:5173",
-    "http://localhost:4173",
-    "http://localhost:80",
-]
+# Allow all CORS origins, methods, headers
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],  # <-- Allow all origins
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["*"],  # <-- Allow all HTTP methods
+    allow_headers=["*"],  # <-- Allow all headers
 )
 
 

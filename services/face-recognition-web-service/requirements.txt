@@ -2,7 +2,7 @@ fastapi[standard]
 facenet-pytorch
 opencv-python-headless
 python-multipart
-pymilvus==2.4.9
+pymilvus
 python-dotenv
 uvicorn[standard]
 pymongo
