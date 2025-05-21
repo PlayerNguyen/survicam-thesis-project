@@ -134,6 +134,13 @@ services:
     build: ./services/ui
     ports:
       - 8080:80
+    environment:
+      VITE_API_GATEWAY_BASE_URL: "http://localhost/api"
+      VITE_API_GATEWAY_AUTH: "http://localhost:3192/auth/"
+      VITE_API_FACE_RECOGNITION_URL: "http://localhost:8555/v2"
+      VITE_API_DEVICE_URL: "http://localhost:3015"
+      VITE_API_DEVICE_STREAM_URL: "http://localhost:3072/"
+      VITE_API_LOGGING_URL: "http://localhost:3234"
 
   # Face Recognition Service
   face-recognition-service:
